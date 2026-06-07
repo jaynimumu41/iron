@@ -80,15 +80,23 @@ header{padding:22px 0 10px}
 .seclabel .em{font-size:18px}
 
 /* ---- exercise card ---- */
-.ex{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px;display:flex;gap:13px;align-items:flex-start;transition:.18s;position:relative;overflow:hidden}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px;transition:.18s;position:relative;overflow:hidden}
+.exrow{display:flex;gap:13px;align-items:flex-start}
 .ex::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--grad);opacity:.0;transition:.18s}
 .ex.done{opacity:.5}
 .ex.done::before{opacity:1;background:var(--green)}
 .ex .chk{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;cursor:pointer;font-size:16px;color:transparent;transition:.15s;margin-top:2px;font-weight:900}
 .ex.done .chk{background:var(--green);border-color:var(--green);color:#06210d}
 .ex .body{flex:1;min-width:0}
-.ex .nm{font-weight:900;font-size:16.5px;letter-spacing:.3px}
+.ex .nm{font-weight:900;font-size:16.5px;letter-spacing:.3px;cursor:pointer;display:flex;align-items:baseline;flex-wrap:wrap;gap:6px}
 .ex.done .nm{text-decoration:line-through;text-decoration-color:var(--green)}
+.howhint{font-size:10.5px;color:var(--orange);font-weight:800;letter-spacing:.5px;opacity:.8;text-decoration:none}
+.ex.open .howhint{opacity:1}
+.howto{max-height:0;overflow:hidden;opacity:0;transition:max-height .28s ease,opacity .25s,margin-top .28s,padding-top .28s}
+.ex.open .howto{max-height:360px;opacity:1;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.howto p{font-size:13px;color:var(--mut);font-weight:600;line-height:1.65;margin:0 0 10px}
+.ytlink{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line);color:var(--red2);font-weight:800;font-size:12.5px;padding:7px 12px;border-radius:9px;text-decoration:none}
+.ytlink:active{transform:scale(.97)}
 .ex .en{font-family:"Oswald";font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
 .ex .scheme{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
 .pill{font-size:12px;font-weight:800;padding:4px 9px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--txt);display:flex;align-items:center;gap:4px}
@@ -341,6 +349,70 @@ const EX = {
     {nm:"登山者",   en:"Mountain Climber",  need:["body"]},
     {nm:"啞鈴推舉箭步",en:"DB Thruster",    need:["db"]}
   ]
+};
+
+/* ---------- 動作要點 (點名稱展開) ---------- */
+const HOWTO = {
+  "槓鈴背蹲":"槓置上斜方肌，雙腳與肩同寬、腳尖微外八。核心收緊，臀部向後下坐至大腿低於平行，腳跟發力站起，全程背打直。",
+  "槓鈴前蹲":"槓放鎖骨前三角肌上、手肘高抬。上半身保持直立往下蹲，膝蓋對齊腳尖，靠腿前側發力站起。",
+  "高腳杯深蹲":"雙手捧壺鈴或啞鈴於胸前、手肘朝下。挺胸蹲到底（手肘碰大腿內側）再站起。",
+  "壺鈴高腳杯蹲":"雙手捧壺鈴於胸前、手肘朝下，挺胸蹲到底再站起，是學深蹲姿勢的好選擇。",
+  "保加利亞分腿蹲":"後腳腳背放椅上、前腳向前一大步。垂直下蹲到後膝接近地面，前腳跟發力起身。腿弱者必練。",
+  "啞鈴箭步蹲":"雙手持啞鈴垂於體側，向前跨一大步下蹲至雙膝約90度，前腳發力收回，左右交替。",
+  "壺鈴箭步蹲":"壺鈴胸前抱或單手提，向前或行進跨步下蹲，軀幹保持直立。",
+  "槓鈴箭步蹲":"槓置上背做原地或行進箭步蹲，重心穩定、膝蓋對齊腳尖。",
+  "負重登階":"手持啞鈴，一整隻腳踩上椅面，靠上方腿發力站直，再控制慢慢下放，避免後腳蹬地借力。",
+  "徒手深蹲(慢離心)":"用3–4秒慢慢蹲下，底部停1秒再站起。沒器材也能靠節奏把腿練到痠。",
+  "槓鈴硬舉":"槓貼小腿，挺胸收緊背、屈髖握槓。臀腿同時發力沿大腿把槓拉起站直，背全程打直勿拱。",
+  "羅馬尼亞硬舉":"微屈膝、臀部向後推，槓貼著腿下放到膝下、感受腿後拉伸，再夾臀把身體拉直。",
+  "啞鈴羅馬尼亞硬舉":"雙手持啞鈴於腿前，臀部後推、背打直下放，腿後（膕繩肌）有拉伸感後起身。",
+  "壺鈴硬舉":"壺鈴置雙腳間，屈髖挺背握住，臀腿發力站直，過程背打直。",
+  "槓鈴臀推":"上背靠椅、槓墊軟墊置髖部。腳跟發力把髖頂到頂端、用力夾臀停一下，再慢慢下放。",
+  "早安式":"槓置上背、微屈膝，臀部向後推使上身前傾到接近平行，背打直再起身。重量放輕、重感受。",
+  "壺鈴擺盪":"屈髖把壺鈴盪到胯下，再爆發夾臀挺髖把壺鈴甩到胸口高度。動力來自髖、不是手臂。",
+  "單腿羅馬尼亞硬舉":"單腳站立，另一腿向後伸直，臀部後推、上身前傾下放，感受站立腿的腿後與平衡。",
+  "臀橋(慢)":"仰躺屈膝、腳跟踩地，臀部發力抬到頂端用力夾緊2秒再放下。",
+  "原地箭步蹲":"徒手向後跨或原地下蹲，雙膝約90度、軀幹直立，左右交替。",
+  "啞鈴側蹲":"雙腳寬站、腳尖微外。重心移向一側屈膝下蹲、另一腿伸直，左右交替，練內收與臀。",
+  "提踵":"前腳掌踩穩（可墊高），腳跟盡量抬到最高停1秒，再慢慢下放，可手持啞鈴加重。",
+  "牆壁靜蹲":"背靠牆往下滑到大腿與地面平行、膝約90度，撐住計時。",
+  "槓鈴臥推":"平躺椅上、握略寬於肩，肩胛收緊。槓垂直下放至胸口輕觸再推回，全程腳踩穩。",
+  "啞鈴臥推":"雙手持啞鈴於胸線兩側、手肘約45度，向上推到接近併攏，控制下放回胸線。",
+  "上斜啞鈴臥推":"椅背調30–45度，啞鈴沿斜角往上推，重點刺激上胸。",
+  "啞鈴飛鳥":"平躺、手肘微屈固定，雙臂像抱大樹般向兩側張開下放，感受胸部拉伸再夾起。",
+  "雙椅撐體":"雙手撐在椅緣、身體下沉到手肘約90度再撐起。身體越直越練三頭，前傾越多越練胸。",
+  "伏地挺身":"手略寬於肩，頭到腳成一直線、核心收緊。胸口下放貼近地面再推起，勿塌腰。",
+  "槓鈴肩推":"站姿、槓置鎖骨前，核心與臀收緊把槓垂直推過頭頂、手臂打直，勿過度後仰。",
+  "啞鈴肩推":"啞鈴舉於肩側、手肘約90度，向上推到接近併攏，再控制下放到耳邊。",
+  "壺鈴肩推":"壺鈴架於手腕外側、置於肩前，垂直推過頭，核心穩定不晃。",
+  "阿諾肩推":"啞鈴起始掌心朝自己於胸前，往上推的同時旋轉到掌心朝前，刺激整個肩部。",
+  "側平舉":"微屈手肘，把啞鈴像倒水般向兩側平舉到與肩同高再控制放下，練中三角、別聳肩。",
+  "派克伏地挺身":"臀部抬高成倒V字，頭頂朝地面下放再推起，是肩推的徒手替代。",
+  "窄距伏地挺身":"雙手靠近（約肩寬內），手肘貼著身體下放，重點刺激三頭肌。",
+  "啞鈴過頭三頭":"雙手捧一顆啞鈴於頭後，固定手肘、只動前臂把啞鈴上舉伸直，感受三頭。",
+  "啞鈴俯身臂屈伸":"上身前傾、上臂貼緊身體，前臂向後伸直、夾緊三頭再收回。",
+  "引體向上":"正握略寬於肩懸吊，先沉肩胛再把下巴拉過槓，控制慢慢下放。做不到可用離心或彈力帶輔助。",
+  "反手引體":"掌心朝自己、與肩同寬，把身體拉到下巴過槓，背與二頭一起出力。",
+  "槓鈴划船":"屈髖上身前傾約45度、背打直，把槓拉向下腹、夾緊背再控制下放。",
+  "啞鈴單臂划船":"一手一膝撐在椅上、背打平，另一手持啞鈴自然下垂，拉向腰側夾背再放下。",
+  "壺鈴划船":"屈髖前傾、背打直，把壺鈴拉向腹側、夾背再下放。",
+  "離心引體":"用跳或墊腳到槓上方，再用3–5秒盡量慢地控制身體下放。建立引體向上的力量。",
+  "啞鈴二頭彎舉":"手肘貼緊身體固定，把啞鈴向上彎起、夾緊二頭，再慢慢放下，別用身體甩。",
+  "槓鈴彎舉":"與肩同寬握槓、手肘貼身，把槓彎起再控制下放，身體保持穩定不晃。",
+  "壺鈴高拉":"壺鈴從胯下用髖發力上拉到胸口高度，手肘高於手腕，節奏連貫。",
+  "錘式彎舉":"掌心相對（拇指朝上）做彎舉，同時練二頭與前臂。",
+  "懸吊舉腿":"懸吊於單槓、肩胛收緊，用腹部把雙腿或膝蓋抬高，避免身體前後擺盪借力。",
+  "棒式":"前臂與腳尖撐地，頭到腳成一直線，夾緊核心與臀部，正常呼吸撐住計時。",
+  "土耳其起立":"仰躺單手把壺鈴舉向天花板，依序撐起到站立、再倒序躺回，全程眼睛盯著壺鈴。動作慢而穩。",
+  "俄羅斯轉體":"坐姿、上身微後傾、雙腳離地，持重物左右轉體碰向地面，練腹斜肌。",
+  "仰臥抬腿":"仰躺、雙手壓地，雙腿併攏伸直抬到垂直再慢慢下放，全程下背貼地別拱起。",
+  "死蟲":"仰躺、手腳朝上，對側的手與腳同時伸出貼近地面再收回，下背全程貼地。",
+  "側棒式":"側躺、單手前臂撐地，把髖抬離地使身體成一直線撐住，換邊。",
+  "壺鈴抓舉":"壺鈴從胯下一鼓作氣上拉並翻轉到手臂打直過頭，主要靠髖爆發、手臂引導。",
+  "壺鈴翻推":"先把壺鈴翻到肩前架住（clean），再順勢推過頭（press），兩動作連貫。",
+  "波比跳":"下蹲撐地→雙腳跳成棒式→(可加一下伏地挺身)→收腿起身向上跳，全身燃脂。",
+  "登山者":"撐成棒式，雙膝交替快速收向胸口、像原地跑，核心保持穩定不翹臀。",
+  "啞鈴推舉箭步":"高腳杯持啞鈴深蹲，起身時順勢把啞鈴推過頭頂，全身連貫發力（Thruster）。"
 };
 
 /* ---------- weekly split (固定，從設計上保證規則) ----------
@@ -598,21 +670,28 @@ function renderToday(){
   }
   D.items.forEach((ex,i)=>{
     const on=!!st.checks[i];
-    const repsLabel = D.circuit? "40秒" : ex.reps;
+    const how = HOWTO[ex.nm] || "保持動作標準、全程控制節奏，感受目標肌群發力。重量以能標準完成為準。";
+    const q = encodeURIComponent(ex.nm.replace(/[（(].*?[）)]/g,'').trim() + " 教學");
     html+=`
     <div class="ex ${on?'done':''}" data-i="${i}">
-      <div class="chk" data-chk="${i}">✓</div>
-      <div class="body">
-        <div class="nm">${ex.nm}</div>
-        <div class="en">${ex.en} · ${ex.label}</div>
-        <div class="scheme">
-          ${D.circuit
-            ? `<span class="pill"><span class="k">輪</span><b>5</b></span><span class="pill"><span class="k">每組</span><b>40</b>秒</span><span class="pill"><span class="k">休</span><b>20</b>秒</span>`
-            : `<span class="pill"><span class="k">組</span><b>${ex.sets}</b></span><span class="pill"><span class="k">次</span><b>${ex.reps}</b></span><span class="pill"><span class="k">休</span><b>${ex.rest}</b>秒</span>`}
+      <div class="exrow">
+        <div class="chk" data-chk="${i}">✓</div>
+        <div class="body">
+          <div class="nm" data-how="${i}">${ex.nm}<span class="howhint">怎麼做 ›</span></div>
+          <div class="en">${ex.en} · ${ex.label}</div>
+          <div class="scheme">
+            ${D.circuit
+              ? `<span class="pill"><span class="k">輪</span><b>5</b></span><span class="pill"><span class="k">每組</span><b>40</b>秒</span><span class="pill"><span class="k">休</span><b>20</b>秒</span>`
+              : `<span class="pill"><span class="k">組</span><b>${ex.sets}</b></span><span class="pill"><span class="k">次</span><b>${ex.reps}</b></span><span class="pill"><span class="k">休</span><b>${ex.rest}</b>秒</span>`}
+          </div>
+          <div class="equip">${eqHTML(ex.need)}</div>
         </div>
-        <div class="equip">${eqHTML(ex.need)}</div>
+        <button class="timerbtn" data-timer="${ex.rest}">⏱<span class="t">${ex.rest}s</span></button>
       </div>
-      <button class="timerbtn" data-timer="${ex.rest}">⏱<span class="t">${ex.rest}s</span></button>
+      <div class="howto">
+        <p>${how}</p>
+        <a class="ytlink" href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">▶ 看 YouTube 示範影片</a>
+      </div>
     </div>`;
   });
 
@@ -711,6 +790,9 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
 });
 
 document.addEventListener("click",e=>{
+  // 展開/收合 動作說明
+  const how=e.target.closest("[data-how]");
+  if(how){ how.closest(".ex").classList.toggle("open"); return; }
   // 勾選動作
   const chk=e.target.closest("[data-chk]");
   if(chk){
