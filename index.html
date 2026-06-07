@@ -156,6 +156,15 @@ header{padding:22px 0 10px}
 .tquick{display:flex;gap:8px;justify-content:center;margin-top:16px}
 .tquick button{background:var(--bg2);border:1px solid var(--line);color:var(--mut);font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:"Teko";font-size:18px}
 
+/* 週日加練選單 */
+.optgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px}
+.optbtn{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;text-align:left;transition:.15s;display:flex;align-items:center;gap:11px}
+.optbtn:active{transform:scale(.97)}
+.optbtn.rec{border-color:var(--orange);background:linear-gradient(135deg,rgba(255,122,24,.12),var(--card))}
+.optbtn .em{font-size:26px;flex:none}
+.optbtn .nm{font-weight:900;font-size:15px}
+.optbtn .sub{font-size:11px;color:var(--mut);font-weight:700;margin-top:1px}
+
 .empty{text-align:center;color:var(--mut);padding:50px 20px;font-weight:700}
 .empty .big{font-size:60px;margin-bottom:10px}
 .foot{text-align:center;color:var(--dim);font-size:11px;font-weight:700;padding:26px 0 6px;letter-spacing:1px}
@@ -406,7 +415,7 @@ const ROLE = {
 };
 
 /* ---------- state ---------- */
-const DEF = {equip:{kb:1,bb:1,db:1,pull:1,bench:1,body:1}, done:{}, total:0};
+const DEF = {equip:{kb:1,bb:1,db:1,pull:1,bench:1,body:1}, done:{}, total:0, optTrain:{}};
 let S = load();
 function load(){ try{return Object.assign({},DEF,JSON.parse(localStorage.iron_state||"{}"))}catch(e){return {...DEF}} }
 function save(){ localStorage.iron_state = JSON.stringify(S); }
@@ -433,11 +442,21 @@ function pickUnique(poolName, n, seed, used){
   return out;
 }
 
-function buildDay(date){
-  const dow = date.getDay();
-  const cfg = SPLIT[dow];
-  if(cfg.rest) return {dow,cfg,rest:true,items:[]};
-  const seed = weekNum(date) + dow;   // 每週輪替、每天不同
+/* ---------- 週日加練選項 (預設休息，可自選練) ----------
+   刻意不排腿：週六體能 / 週一腿，週日練腿會造成連續腿日，違反「同部位不連兩天」 */
+const OPT = {
+  pull:{title:"上肢拉",sub:"週日加練 · 背 · 二頭",icon:"🤏",color:"#3aa0ff",tags:["加練","拉","背"],
+    slots:[{pool:"pullBack",role:"primary",label:"主項"},{pool:"pullBack",role:"secondary",label:"次項"},{pool:"pullBicep",role:"accessory",label:"二頭"},{pool:"pullBicep",role:"accessory",label:"二頭"},{pool:"core",role:"core",label:"核心"}]},
+  push:{title:"上肢推",sub:"週日加練 · 胸 · 肩 · 三頭",icon:"🤜",color:"#ff7a18",tags:["加練","推","胸"],
+    slots:[{pool:"pushChest",role:"primary",label:"主項"},{pool:"pushShoulder",role:"secondary",label:"肩部"},{pool:"pushChest",role:"accessory",label:"胸"},{pool:"pushTri",role:"accessory",label:"三頭"},{pool:"core",role:"core",label:"核心"}]},
+  arms:{title:"手臂核心",sub:"週日加練 · 手臂 · 腹",icon:"🔥",color:"#ffb020",tags:["加練","手臂","核心"],
+    slots:[{pool:"pullBicep",role:"secondary",label:"二頭"},{pool:"pushTri",role:"secondary",label:"三頭"},{pool:"pullBicep",role:"accessory",label:"二頭"},{pool:"pushTri",role:"accessory",label:"三頭"},{pool:"core",role:"core",label:"核心"},{pool:"core",role:"core",label:"核心"}]},
+  cond:{title:"全身體能",sub:"週日加練 · 壺鈴循環",icon:"⚡",color:"#23c552",tags:["加練","體能","循環"],circuit:true,
+    slots:[{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"core",role:"cond",label:"循環"}]}
+};
+const OPT_SEED = {pull:11,push:23,arms:31,cond:43};
+
+function buildWorkout(cfg, seed){
   const used=[]; const items=[];
   cfg.slots.forEach((slot,idx)=>{
     const picks = pickUnique(slot.pool, 1, seed+idx*3, used);
@@ -452,7 +471,20 @@ function buildDay(date){
     });
   });
   let est = items.reduce((a,b)=>a+b.est,0) + 6; // +暖身6分
-  return {dow,cfg,rest:false,items,est,circuit:!!cfg.circuit,seed};
+  return {cfg,rest:false,items,est,circuit:!!cfg.circuit,seed};
+}
+
+function buildDay(date){
+  const dow = date.getDay();
+  const cfg = SPLIT[dow];
+  const key = todayKey(date);
+  const opt = S.optTrain && S.optTrain[key];
+  if(cfg.rest && !opt) return {dow,cfg,rest:true,items:[]};          // 純休息日
+  if(cfg.rest && opt){                                                // 休息日→使用者選擇加練
+    const ocfg = OPT[opt] || OPT.pull;
+    return Object.assign({dow,optional:true,focus:opt}, buildWorkout(ocfg, weekNum(date)+(OPT_SEED[opt]||11)));
+  }
+  return Object.assign({dow}, buildWorkout(cfg, weekNum(date)+dow));  // 一般訓練日
 }
 
 /* ---------- 完成狀態 ---------- */
@@ -464,16 +496,13 @@ function getStreak(){
   let s=0; const d=new Date();
   for(let i=0;i<400;i++){
     const k=todayKey(d); const dow=d.getDay();
-    const isRest = SPLIT[dow].rest;
+    const opt = S.optTrain && S.optTrain[k];
+    const isRest = SPLIT[dow].rest && !opt;          // 有加練的週日視為訓練日
     const done = S.done[k] && S.done[k].complete;
-    if(i===0){ // 今天:還沒練不扣分,但也不加(除非已完成或休息)
-      if(isRest||done){ s+=isRest?0:1; }
-      // 今天未完成→繼續往回看,不中斷
-    } else {
-      if(isRest){ /* 不中斷,不加 */ }
-      else if(done){ s++; }
-      else break;
-    }
+    if(isRest){ d.setDate(d.getDate()-1); continue; } // 純休息日:不中斷、不加
+    if(done){ s++; }                                  // 訓練日已完成 → +1
+    else if(i===0){ /* 今天還沒完成 → 不中斷,繼續往回看 */ }
+    else break;                                       // 過去的訓練日沒完成 → 斷
     d.setDate(d.getDate()-1);
   }
   return s;
@@ -523,7 +552,12 @@ function renderToday(){
       <div class="seclabel"><span class="em">🛌</span><span>恢復建議</span><div class="ln"></div></div>
       <div class="tip"><span class="i">💡</span><div>今天讓肌肉修復。可做 10–15 分鐘輕鬆散步、伸展或滾筒放鬆。睡飽、吃夠蛋白質——這就是你變強的時候。</div></div>
       <div class="tip" style="margin-top:11px;background:linear-gradient(135deg,rgba(35,197,82,.10),rgba(58,160,255,.05));border-color:rgba(35,197,82,.25);color:#bff0c9">
-        <span class="i">🔥</span><div>連續紀錄不會因休息中斷。明天是 <b>${SPLIT[(date.getDay()+1)%7].title}</b>，養足精神回來。</div></div>`;
+        <span class="i">🔥</span><div>連續紀錄不會因休息中斷。明天是 <b>${SPLIT[(date.getDay()+1)%7].title}</b>，養足精神回來。</div></div>
+      <div class="seclabel"><span class="em">💪</span><span>還是想練？</span><div class="ln"></div></div>
+      <div class="tip" style="background:linear-gradient(135deg,rgba(255,75,62,.10),rgba(255,176,32,.05));border-color:rgba(255,75,62,.25);color:#ffd0b0"><span class="i">🔥</span><div>精神好就別浪費！選一個部位，我馬上排今天的菜單。<b>刻意不排腿</b>——留力給明天的腿日（同部位不連兩天）。</div></div>
+      <div class="optgrid">
+        ${Object.keys(OPT).map(k=>`<div class="optbtn ${k==='pull'?'rec':''}" data-opt="${k}"><span class="em">${OPT[k].icon}</span><div><div class="nm">${OPT[k].title}${k==='pull'?' ⭐':''}</div><div class="sub">${OPT[k].tags.slice(1).join(' · ')}</div></div></div>`).join('')}
+      </div>`;
     return;
   }
 
@@ -550,6 +584,8 @@ function renderToday(){
         <div class="meta"><span>進度 ${doneN}/${total}</span><span>${pct}%${st.complete?' · 已完成 ✓':''}</span></div>
       </div>
     </div>`;
+
+  if(D.optional){ html+=`<div class="tip" style="margin-top:14px;background:linear-gradient(135deg,rgba(255,75,62,.12),rgba(255,176,32,.06));border-color:rgba(255,75,62,.3);color:#ffd0b0"><span class="i">🔥</span><div>加練模式啟動！今天原是休息日，你選擇多練一場。已自動避開腿部，留力給明天的腿日。</div></div>`; }
 
   // 暖身
   html+=`<div class="seclabel"><span class="em">🔥</span><span>暖身 WARM-UP · 5 分</span><div class="ln"></div></div>
@@ -587,6 +623,7 @@ function renderToday(){
   html+=`<div class="actions">
     <button class="btn ${st.complete?'done':'go'}" id="completeBtn">${st.complete?'✓ 今日已完成 點此取消':allDone?'🏆 收工！標記完成':'💪 全部完成 標記今日'}</button>
     <button class="btn ghost" id="resetDayBtn">清除今日勾選</button>
+    ${D.optional?`<button class="btn ghost" id="revertRestBtn">↩ 改回休息日</button>`:''}
   </div>`;
 
   v.innerHTML=html;
@@ -609,7 +646,9 @@ function renderWeek(){
   let html=`<div class="seclabel"><span class="em">📋</span><span>本週作戰計畫</span><div class="ln"></div></div>`;
   for(let i=0;i<7;i++){
     const d=new Date(mon); d.setDate(mon.getDate()+i);
-    const cfg=SPLIT[d.getDay()]; const key=todayKey(d);
+    let cfg=SPLIT[d.getDay()]; const key=todayKey(d);
+    const opt=S.optTrain && S.optTrain[key];
+    if(cfg.rest && opt) cfg=OPT[opt];   // 週日選了加練 → 顯示該菜單
     const isToday=key===todayKey(now);
     const done=S.done[key]&&S.done[key].complete;
     const isLeg=cfg.tags&&cfg.tags.includes("腿"); if(isLeg)legCount++;
@@ -696,6 +735,20 @@ document.addEventListener("click",e=>{
     const key=todayKey(); const st=dayState(key); st.checks={};
     if(st.complete){st.complete=false;S.total=Math.max(0,(S.total||0)-1);}
     setDayState(key,st); renderAll(); return;
+  }
+  // 週日加練:選擇部位
+  const optb=e.target.closest("[data-opt]");
+  if(optb){
+    const key=todayKey(); if(!S.optTrain)S.optTrain={};
+    S.optTrain[key]=optb.dataset.opt; save();
+    renderAll(); toast("🔥 加練菜單已排好，拼了！"); window.scrollTo({top:0,behavior:'smooth'}); return;
+  }
+  // 週日加練:改回休息
+  if(e.target.id==="revertRestBtn"){
+    const key=todayKey();
+    if(S.done[key]&&S.done[key].complete){ S.total=Math.max(0,(S.total||0)-1); }
+    delete S.done[key]; if(S.optTrain) delete S.optTrain[key];
+    save(); renderAll(); toast("已改回休息日"); window.scrollTo({top:0,behavior:'smooth'}); return;
   }
   // 器材切換
   const eq=e.target.closest("[data-eq]");
