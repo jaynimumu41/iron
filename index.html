@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>IRON · 鐵血訓練</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Oswald:wght@400;500;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b; --bg2:#121214; --card:#17171a; --card2:#1d1d21;
+  --line:#2a2a30; --txt:#f2f2f4; --mut:#8a8a94; --dim:#5a5a64;
+  --red:#e6312f; --red2:#ff4b3e; --orange:#ff7a18; --amber:#ffb020;
+  --green:#23c552; --blue:#3aa0ff;
+  --grad:linear-gradient(135deg,#ff4b3e 0%,#ff7a18 100%);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:"Noto Sans TC","Oswald",system-ui,sans-serif;
+  font-weight:500; line-height:1.45;
+  padding-bottom:96px;
+  background-image:radial-gradient(900px 500px at 80% -10%,rgba(255,80,40,.10),transparent 60%),radial-gradient(700px 400px at -10% 10%,rgba(255,140,20,.06),transparent 55%);
+  -webkit-font-smoothing:antialiased;
+}
+.eng{font-family:"Teko","Oswald",sans-serif}
+.wrap{max-width:620px;margin:0 auto;padding:0 16px}
+
+/* ---- header ---- */
+header{padding:22px 0 10px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:46px;height:46px;border-radius:12px;background:var(--grad);
+  display:grid;place-items:center;font-size:26px;
+  box-shadow:0 8px 24px rgba(255,75,62,.35);transform:rotate(-3deg)
+}
+.brand h1{font-family:"Teko",sans-serif;font-size:42px;line-height:.9;letter-spacing:1px;font-weight:700}
+.brand h1 small{display:block;font-family:"Noto Sans TC";font-size:11px;font-weight:700;letter-spacing:4px;color:var(--orange);margin-top:2px}
+.tagline{color:var(--mut);font-size:13px;font-weight:700;margin-top:4px;letter-spacing:.5px}
+
+/* ---- stats strip ---- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;position:relative;overflow:hidden}
+.stat .num{font-family:"Teko",sans-serif;font-size:38px;line-height:1;font-weight:700}
+.stat .num.fire{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .lbl{font-size:11px;color:var(--mut);font-weight:700;letter-spacing:1px;margin-top:2px}
+.stat .ico{position:absolute;top:8px;right:10px;font-size:14px;opacity:.5}
+
+/* ---- tabs ---- */
+.tabs{display:flex;gap:6px;margin:18px 0 8px;background:var(--bg2);padding:5px;border-radius:14px;border:1px solid var(--line)}
+.tab{flex:1;text-align:center;padding:10px 4px;border-radius:10px;font-weight:900;font-size:14px;color:var(--mut);cursor:pointer;transition:.15s;letter-spacing:1px}
+.tab.on{background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(255,75,62,.3)}
+
+/* ---- day banner ---- */
+.daybanner{margin-top:8px;border-radius:18px;padding:18px 18px 16px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.daybanner::before{content:"";position:absolute;inset:0;opacity:.16;background:var(--accent,var(--grad))}
+.daybanner.rest::before{opacity:.10}
+.db-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+.db-date{font-size:12px;font-weight:900;letter-spacing:2px;color:var(--txt);opacity:.85}
+.db-title{font-family:"Teko",sans-serif;font-size:46px;line-height:.95;font-weight:700;margin-top:2px;position:relative}
+.db-sub{font-size:13px;color:var(--txt);opacity:.8;font-weight:700;position:relative;margin-top:2px}
+.db-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;position:relative}
+.chip{font-size:11px;font-weight:900;letter-spacing:1px;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.chip.hot{background:var(--grad);border:none;color:#fff}
+.db-badge{position:relative;font-size:30px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+
+/* progress bar on banner */
+.dprog{margin-top:14px;position:relative}
+.dprog .bar{height:8px;border-radius:6px;background:rgba(0,0,0,.4);overflow:hidden}
+.dprog .fill{height:100%;width:0;background:var(--grad);transition:width .3s;border-radius:6px}
+.dprog .meta{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--txt);opacity:.8;margin-top:6px;letter-spacing:.5px}
+
+/* ---- section label ---- */
+.seclabel{display:flex;align-items:center;gap:10px;margin:22px 2px 12px}
+.seclabel .ln{flex:1;height:2px;background:linear-gradient(90deg,var(--orange),transparent)}
+.seclabel span{font-family:"Teko",sans-serif;font-size:24px;font-weight:700;letter-spacing:2px;color:var(--txt)}
+.seclabel .em{font-size:18px}
+
+/* ---- exercise card ---- */
+.ex{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px;display:flex;gap:13px;align-items:flex-start;transition:.18s;position:relative;overflow:hidden}
+.ex::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--grad);opacity:.0;transition:.18s}
+.ex.done{opacity:.5}
+.ex.done::before{opacity:1;background:var(--green)}
+.ex .chk{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;cursor:pointer;font-size:16px;color:transparent;transition:.15s;margin-top:2px;font-weight:900}
+.ex.done .chk{background:var(--green);border-color:var(--green);color:#06210d}
+.ex .body{flex:1;min-width:0}
+.ex .nm{font-weight:900;font-size:16.5px;letter-spacing:.3px}
+.ex.done .nm{text-decoration:line-through;text-decoration-color:var(--green)}
+.ex .en{font-family:"Oswald";font-size:11px;color:var(--dim);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.ex .scheme{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.pill{font-size:12px;font-weight:800;padding:4px 9px;border-radius:8px;background:var(--card2);border:1px solid var(--line);color:var(--txt);display:flex;align-items:center;gap:4px}
+.pill b{font-family:"Teko";font-size:17px;color:var(--orange);font-weight:700;line-height:1}
+.pill .k{color:var(--mut);font-size:10px;font-weight:800}
+.ex .equip{font-size:11px;color:var(--mut);font-weight:700;margin-top:8px}
+.ex .equip .e{display:inline-block;background:var(--bg2);border:1px solid var(--line);padding:2px 7px;border-radius:6px;margin-right:5px}
+.timerbtn{flex:none;align-self:center;background:var(--card2);border:1px solid var(--line);color:var(--amber);font-weight:900;font-size:11px;padding:8px 9px;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;letter-spacing:.5px}
+.timerbtn .t{font-family:"Teko";font-size:18px;color:var(--txt);line-height:1}
+
+/* tip box */
+.tip{background:linear-gradient(135deg,rgba(255,122,24,.10),rgba(255,75,62,.06));border:1px solid rgba(255,122,24,.25);border-radius:14px;padding:13px 15px;font-size:13px;color:#ffd8b0;font-weight:700;display:flex;gap:10px;line-height:1.5}
+.tip .i{font-size:18px;flex:none}
+
+/* big buttons */
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-family:"Teko",sans-serif;font-size:26px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:.15s;text-align:center}
+.btn.go{background:var(--grad);color:#fff;box-shadow:0 10px 30px rgba(255,75,62,.35)}
+.btn.go:active{transform:scale(.98)}
+.btn.done{background:var(--green);color:#06210d}
+.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--mut);font-size:18px;padding:12px}
+.actions{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+
+/* ---- week view ---- */
+.wkrow{display:flex;gap:11px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:9px;cursor:pointer;transition:.15s}
+.wkrow.today{border-color:var(--orange);background:linear-gradient(135deg,rgba(255,122,24,.10),var(--card))}
+.wkrow .wd{flex:none;width:46px;text-align:center}
+.wkrow .wd .d{font-family:"Teko";font-size:30px;font-weight:700;line-height:1}
+.wkrow .wd .w{font-size:10px;color:var(--mut);font-weight:800;letter-spacing:1px}
+.wkrow.today .wd .d{color:var(--orange)}
+.wkrow .ic{font-size:24px;flex:none}
+.wkrow .info{flex:1;min-width:0}
+.wkrow .info .t{font-weight:900;font-size:16px}
+.wkrow .info .s{font-size:12px;color:var(--mut);font-weight:700}
+.wkrow .st{flex:none;font-size:20px}
+.wkrow .focus{font-size:10px;font-weight:900;letter-spacing:1px;padding:3px 8px;border-radius:20px;color:#fff;flex:none}
+
+/* ---- settings ---- */
+.setcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.setcard h3{font-family:"Teko";font-size:24px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.setcard p.d{font-size:12px;color:var(--mut);font-weight:700;margin-bottom:14px}
+.equip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.eqtog{display:flex;align-items:center;gap:11px;background:var(--bg2);border:2px solid var(--line);border-radius:13px;padding:12px;cursor:pointer;transition:.15s}
+.eqtog.on{border-color:var(--orange);background:linear-gradient(135deg,rgba(255,122,24,.12),var(--bg2))}
+.eqtog .em{font-size:26px;flex:none;filter:grayscale(1);opacity:.5;transition:.15s}
+.eqtog.on .em{filter:none;opacity:1}
+.eqtog .nm{font-weight:900;font-size:15px}
+.eqtog .sub{font-size:11px;color:var(--mut);font-weight:700}
+.eqtog .sw{margin-left:auto;width:20px;height:20px;border-radius:6px;border:2px solid var(--line);display:grid;place-items:center;font-weight:900;color:transparent;flex:none}
+.eqtog.on .sw{background:var(--orange);border-color:var(--orange);color:#1a0d00}
+
+/* danger / reset */
+.linkbtn{background:none;border:none;color:var(--dim);font-weight:800;font-size:13px;text-decoration:underline;cursor:pointer;padding:8px}
+
+/* ---- timer modal ---- */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);display:none;place-items:center;z-index:50;padding:24px}
+.overlay.show{display:grid}
+.tmodal{text-align:center;width:100%;max-width:340px}
+.tcircle{position:relative;width:240px;height:240px;margin:0 auto}
+.tcircle svg{transform:rotate(-90deg)}
+.tcircle .tnum{position:absolute;inset:0;display:grid;place-content:center;font-family:"Teko";font-size:80px;font-weight:700;line-height:1}
+.tcircle .tlbl{position:absolute;left:0;right:0;bottom:46px;text-align:center;font-size:12px;letter-spacing:3px;color:var(--mut);font-weight:900}
+.trow{display:flex;gap:10px;justify-content:center;margin-top:26px}
+.tbtn{background:var(--card);border:1px solid var(--line);color:var(--txt);font-family:"Teko";font-size:22px;font-weight:700;padding:12px 22px;border-radius:14px;cursor:pointer;letter-spacing:1px}
+.tbtn.main{background:var(--grad);border:none;color:#fff}
+.tquick{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.tquick button{background:var(--bg2);border:1px solid var(--line);color:var(--mut);font-weight:800;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:"Teko";font-size:18px}
+
+.empty{text-align:center;color:var(--mut);padding:50px 20px;font-weight:700}
+.empty .big{font-size:60px;margin-bottom:10px}
+.foot{text-align:center;color:var(--dim);font-size:11px;font-weight:700;padding:26px 0 6px;letter-spacing:1px}
+.hide{display:none!important}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--orange);color:var(--txt);font-weight:900;padding:13px 22px;border-radius:30px;z-index:60;opacity:0;transition:.3s;pointer-events:none;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">🔥</div>
+      <div>
+        <h1>IRON<small>鐵血訓練</small></h1>
+      </div>
+    </div>
+    <div class="tagline" id="tagline">沒有藉口。今天就是練的一天。</div>
+
+    <div class="stats">
+      <div class="stat"><span class="ico">🔥</span><div class="num fire" id="stStreak">0</div><div class="lbl">連續天數</div></div>
+      <div class="stat"><span class="ico">📅</span><div class="num" id="stWeek">0/6</div><div class="lbl">本週完成</div></div>
+      <div class="stat"><span class="ico">🏆</span><div class="num" id="stTotal">0</div><div class="lbl">總訓練數</div></div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab on" data-tab="today">今日</div>
+      <div class="tab" data-tab="week">本週菜單</div>
+      <div class="tab" data-tab="set">設定</div>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-today"></section>
+    <section id="view-week" class="hide"></section>
+    <section id="view-set" class="hide"></section>
+  </main>
+
+  <div class="foot">IRON · 把「隨便練」變成「按表操課」 💪</div>
+</div>
+
+<!-- timer -->
+<div class="overlay" id="timerOv">
+  <div class="tmodal">
+    <div class="tcircle">
+      <svg width="240" height="240">
+        <circle cx="120" cy="120" r="108" stroke="#2a2a30" stroke-width="14" fill="none"/>
+        <circle id="tArc" cx="120" cy="120" r="108" stroke="url(#g)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="678.58" stroke-dashoffset="0"/>
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4b3e"/><stop offset="1" stop-color="#ff7a18"/></linearGradient></defs>
+      </svg>
+      <div class="tnum" id="tNum">60</div>
+      <div class="tlbl">休息中 REST</div>
+    </div>
+    <div class="tquick">
+      <button data-add="-15">−15</button>
+      <button data-add="15">+15</button>
+      <button data-add="30">+30</button>
+    </div>
+    <div class="trow">
+      <button class="tbtn" id="tReset">重設</button>
+      <button class="tbtn main" id="tToggle">暫停</button>
+      <button class="tbtn" id="tClose">完成</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   IRON · 鐵血訓練  —  每日訓練計畫產生器
+   ============================================================ */
+const WD = ["週日","週一","週二","週三","週四","週五","週六"];
+const todayKey = (d=new Date())=> d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const $ = s=>document.querySelector(s);
+
+/* ---------- equipment ---------- */
+const EQUIP = {
+  kb:   {nm:"壺鈴",  en:"Kettlebell", em:"🔔"},
+  bb:   {nm:"槓鈴",  en:"Barbell",    em:"🏋️"},
+  db:   {nm:"啞鈴",  en:"Dumbbell",   em:"💪"},
+  pull: {nm:"單槓",  en:"Pull-up Bar",em:"🚧"},
+  bench:{nm:"握推椅",en:"Bench",      em:"🪑"},
+  body: {nm:"徒手",  en:"Bodyweight", em:"🧍"}
+};
+
+/* ---------- exercise pools ----------
+   need: 必要器材(全部都要有才會出現)。body 永遠可用。      */
+const EX = {
+  legSquat:[
+    {nm:"槓鈴背蹲", en:"Back Squat",        need:["bb"]},
+    {nm:"槓鈴前蹲", en:"Front Squat",       need:["bb"]},
+    {nm:"高腳杯深蹲",en:"Goblet Squat",     need:["kb"]},
+    {nm:"高腳杯深蹲",en:"Goblet Squat",     need:["db"]},
+    {nm:"保加利亞分腿蹲",en:"Bulgarian Split Squat",need:["bench","db"]},
+    {nm:"啞鈴箭步蹲",en:"Walking Lunge",    need:["db"]},
+    {nm:"壺鈴箭步蹲",en:"KB Lunge",         need:["kb"]},
+    {nm:"槓鈴箭步蹲",en:"Barbell Lunge",    need:["bb"]},
+    {nm:"負重登階", en:"Weighted Step-up",  need:["bench","db"]},
+    {nm:"徒手深蹲(慢離心)",en:"Tempo Air Squat",need:["body"]}
+  ],
+  legHinge:[
+    {nm:"槓鈴硬舉", en:"Deadlift",          need:["bb"]},
+    {nm:"羅馬尼亞硬舉",en:"Barbell RDL",    need:["bb"]},
+    {nm:"啞鈴羅馬尼亞硬舉",en:"DB RDL",     need:["db"]},
+    {nm:"壺鈴硬舉", en:"KB Deadlift",       need:["kb"]},
+    {nm:"槓鈴臀推", en:"Hip Thrust",        need:["bb","bench"]},
+    {nm:"早安式",   en:"Good Morning",      need:["bb"]},
+    {nm:"壺鈴擺盪", en:"KB Swing",          need:["kb"]},
+    {nm:"單腿羅馬尼亞硬舉",en:"Single-leg RDL",need:["db"]},
+    {nm:"臀橋(慢)", en:"Glute Bridge",      need:["body"]}
+  ],
+  legAcc:[
+    {nm:"保加利亞分腿蹲",en:"Bulgarian Split Squat",need:["bench"]},
+    {nm:"壺鈴高腳杯蹲",en:"Goblet Squat",   need:["kb"]},
+    {nm:"原地箭步蹲",en:"Reverse Lunge",    need:["body"]},
+    {nm:"啞鈴側蹲", en:"DB Cossack Squat",  need:["db"]},
+    {nm:"提踵",     en:"Calf Raise",        need:["body"]},
+    {nm:"牆壁靜蹲", en:"Wall Sit",          need:["body"]}
+  ],
+  pushChest:[
+    {nm:"槓鈴臥推", en:"Bench Press",       need:["bench","bb"]},
+    {nm:"啞鈴臥推", en:"DB Bench Press",    need:["bench","db"]},
+    {nm:"上斜啞鈴臥推",en:"Incline DB Press",need:["bench","db"]},
+    {nm:"啞鈴飛鳥", en:"DB Fly",            need:["bench","db"]},
+    {nm:"雙椅撐體", en:"Bench Dips",        need:["bench"]},
+    {nm:"伏地挺身", en:"Push-up",           need:["body"]}
+  ],
+  pushShoulder:[
+    {nm:"槓鈴肩推", en:"Overhead Press",    need:["bb"]},
+    {nm:"啞鈴肩推", en:"DB Shoulder Press", need:["db"]},
+    {nm:"壺鈴肩推", en:"KB Press",          need:["kb"]},
+    {nm:"阿諾肩推", en:"Arnold Press",      need:["db"]},
+    {nm:"側平舉",   en:"Lateral Raise",     need:["db"]},
+    {nm:"派克伏地挺身",en:"Pike Push-up",   need:["body"]}
+  ],
+  pushTri:[
+    {nm:"窄距伏地挺身",en:"Close-grip Push-up",need:["body"]},
+    {nm:"啞鈴過頭三頭",en:"OH Tricep Ext",  need:["db"]},
+    {nm:"雙椅撐體", en:"Bench Dips",        need:["bench"]},
+    {nm:"啞鈴俯身臂屈伸",en:"DB Kickback",  need:["db"]}
+  ],
+  pullBack:[
+    {nm:"引體向上", en:"Pull-up",           need:["pull"]},
+    {nm:"反手引體", en:"Chin-up",           need:["pull"]},
+    {nm:"槓鈴划船", en:"Barbell Row",       need:["bb"]},
+    {nm:"啞鈴單臂划船",en:"DB Row",         need:["db"]},
+    {nm:"壺鈴划船", en:"KB Row",            need:["kb"]},
+    {nm:"離心引體", en:"Negative Pull-up",  need:["pull"]}
+  ],
+  pullBicep:[
+    {nm:"啞鈴二頭彎舉",en:"DB Curl",        need:["db"]},
+    {nm:"槓鈴彎舉", en:"Barbell Curl",      need:["bb"]},
+    {nm:"反手引體", en:"Chin-up",           need:["pull"]},
+    {nm:"壺鈴高拉", en:"KB High Pull",      need:["kb"]},
+    {nm:"錘式彎舉", en:"Hammer Curl",       need:["db"]}
+  ],
+  core:[
+    {nm:"懸吊舉腿", en:"Hanging Leg Raise", need:["pull"]},
+    {nm:"棒式",     en:"Plank",             need:["body"]},
+    {nm:"土耳其起立",en:"Turkish Get-up",   need:["kb"]},
+    {nm:"俄羅斯轉體",en:"Russian Twist",    need:["db"]},
+    {nm:"仰臥抬腿", en:"Lying Leg Raise",   need:["body"]},
+    {nm:"死蟲",     en:"Dead Bug",          need:["body"]},
+    {nm:"側棒式",   en:"Side Plank",        need:["body"]}
+  ],
+  conditioning:[
+    {nm:"壺鈴擺盪", en:"KB Swing",          need:["kb"]},
+    {nm:"壺鈴抓舉", en:"KB Snatch",         need:["kb"]},
+    {nm:"壺鈴翻推", en:"KB Clean & Press",  need:["kb"]},
+    {nm:"高腳杯深蹲",en:"Goblet Squat",     need:["kb"]},
+    {nm:"高腳杯深蹲",en:"Goblet Squat",     need:["db"]},
+    {nm:"波比跳",   en:"Burpee",            need:["body"]},
+    {nm:"登山者",   en:"Mountain Climber",  need:["body"]},
+    {nm:"啞鈴推舉箭步",en:"DB Thruster",    need:["db"]}
+  ]
+};
+
+/* ---------- weekly split (固定，從設計上保證規則) ----------
+   腿: 週一/週四/週六 共 3 天 (你腿弱→多排一天)
+   同部位絕不連兩天:  腿→推→拉→腿→推→體能→休
+*/
+const SPLIT = {
+  1:{title:"下肢力量",sub:"蹲系主導 · 打地基",icon:"🦵",color:"#ff4b3e",
+     tags:["腿","蹲","力量"],
+     slots:[
+       {pool:"legSquat", role:"primary",   label:"主項"},
+       {pool:"legSquat", role:"secondary", label:"次項"},
+       {pool:"legAcc",   role:"accessory", label:"輔助"},
+       {pool:"legAcc",   role:"accessory", label:"輔助"},
+       {pool:"core",     role:"core",      label:"核心"}
+     ]},
+  2:{title:"上肢推",sub:"胸 · 肩 · 三頭",icon:"🤜",color:"#ff7a18",
+     tags:["推","胸","肩"],
+     slots:[
+       {pool:"pushChest",   role:"primary",   label:"主項"},
+       {pool:"pushChest",   role:"secondary", label:"次項"},
+       {pool:"pushShoulder",role:"secondary", label:"肩部"},
+       {pool:"pushTri",     role:"accessory", label:"三頭"},
+       {pool:"core",        role:"core",      label:"核心"}
+     ]},
+  3:{title:"上肢拉",sub:"背 · 二頭 · 抓握",icon:"🤏",color:"#3aa0ff",
+     tags:["拉","背","二頭"],
+     slots:[
+       {pool:"pullBack",  role:"primary",   label:"主項"},
+       {pool:"pullBack",  role:"secondary", label:"次項"},
+       {pool:"pullBicep", role:"accessory", label:"二頭"},
+       {pool:"pullBicep", role:"accessory", label:"二頭"},
+       {pool:"core",      role:"core",      label:"核心"}
+     ]},
+  4:{title:"下肢後鏈",sub:"硬舉 · 臀腿 · 強化弱點",icon:"🍑",color:"#e6312f",
+     tags:["腿","硬舉","臀"],
+     slots:[
+       {pool:"legHinge", role:"primary",   label:"主項"},
+       {pool:"legHinge", role:"secondary", label:"次項"},
+       {pool:"legAcc",   role:"accessory", label:"輔助"},
+       {pool:"legAcc",   role:"accessory", label:"輔助"},
+       {pool:"core",     role:"core",      label:"核心"}
+     ]},
+  5:{title:"肩臂強化",sub:"肩 · 手臂 · 線條",icon:"💪",color:"#ffb020",
+     tags:["推","肩","手臂"],
+     slots:[
+       {pool:"pushShoulder",role:"primary",   label:"主項"},
+       {pool:"pushShoulder",role:"secondary", label:"次項"},
+       {pool:"pushTri",     role:"accessory", label:"三頭"},
+       {pool:"pullBicep",   role:"accessory", label:"二頭"},
+       {pool:"core",        role:"core",      label:"核心"}
+     ]},
+  6:{title:"全身體能",sub:"壺鈴循環 · 燃脂 · 心肺",icon:"⚡",color:"#23c552",
+     tags:["全身","體能","循環"],circuit:true,
+     slots:[
+       {pool:"conditioning",role:"cond",label:"循環"},
+       {pool:"conditioning",role:"cond",label:"循環"},
+       {pool:"conditioning",role:"cond",label:"循環"},
+       {pool:"conditioning",role:"cond",label:"循環"},
+       {pool:"core",        role:"cond",label:"循環"}
+     ]},
+  0:{title:"完全休息",sub:"恢復才是變強的一部分",icon:"😴",color:"#5a5a64",rest:true}
+};
+
+/* role → 組數/次數/休息(秒) */
+const ROLE = {
+  primary:   {sets:5, reps:"5",    rest:150, sw:50},
+  secondary: {sets:4, reps:"8-10", rest:90,  sw:45},
+  accessory: {sets:3, reps:"12-15",rest:60,  sw:40},
+  core:      {sets:3, reps:"30-45秒",rest:45,sw:40},
+  cond:      {sets:5, reps:"40秒",  rest:20,  sw:40}
+};
+
+/* ---------- state ---------- */
+const DEF = {equip:{kb:1,bb:1,db:1,pull:1,bench:1,body:1}, done:{}, total:0};
+let S = load();
+function load(){ try{return Object.assign({},DEF,JSON.parse(localStorage.iron_state||"{}"))}catch(e){return {...DEF}} }
+function save(){ localStorage.iron_state = JSON.stringify(S); }
+
+/* ---------- 產生器 ---------- */
+function weekNum(d){ const o=new Date(d); o.setHours(0,0,0,0); o.setDate(o.getDate()+4-(o.getDay()||7)); const y=new Date(o.getFullYear(),0,1); return Math.ceil(((o-y)/86400000+1)/7); }
+function avail(ex){ return ex.need.every(n=>S.equip[n]); }
+
+function pickUnique(poolName, n, seed, used){
+  let pool = (EX[poolName]||[]).filter(avail);
+  // 去掉同名(避免同一天出現重複動作)
+  const out=[]; const seen=new Set(used);
+  for(let i=0;i<pool.length && out.length<n;i++){
+    const ex = pool[(seed+i)%pool.length];
+    if(seen.has(ex.nm)) continue;
+    seen.add(ex.nm); out.push(ex);
+  }
+  // 若不夠(器材太少)，允許重複名稱補滿，最後 fallback 徒手
+  let g=0;
+  while(out.length<n){
+    if(pool.length){ out.push(pool[(seed+g)%pool.length]); }
+    else break; g++; if(g>20)break;
+  }
+  return out;
+}
+
+function buildDay(date){
+  const dow = date.getDay();
+  const cfg = SPLIT[dow];
+  if(cfg.rest) return {dow,cfg,rest:true,items:[]};
+  const seed = weekNum(date) + dow;   // 每週輪替、每天不同
+  const used=[]; const items=[];
+  cfg.slots.forEach((slot,idx)=>{
+    const picks = pickUnique(slot.pool, 1, seed+idx*3, used);
+    const ex = picks[0];
+    if(!ex){ return; }
+    used.push(ex.nm);
+    const r = ROLE[slot.role];
+    items.push({
+      nm:ex.nm, en:ex.en, need:ex.need, label:slot.label, role:slot.role,
+      sets:r.sets, reps:r.reps, rest:r.rest,
+      est: Math.round(r.sets*(r.rest+r.sw)/60)
+    });
+  });
+  let est = items.reduce((a,b)=>a+b.est,0) + 6; // +暖身6分
+  return {dow,cfg,rest:false,items,est,circuit:!!cfg.circuit,seed};
+}
+
+/* ---------- 完成狀態 ---------- */
+function dayState(key){ return S.done[key] || {checks:{}, complete:false}; }
+function setDayState(key,st){ S.done[key]=st; save(); }
+
+/* streak: 往回數，連續每天 (休息日視為不中斷；訓練日需完成) */
+function getStreak(){
+  let s=0; const d=new Date();
+  for(let i=0;i<400;i++){
+    const k=todayKey(d); const dow=d.getDay();
+    const isRest = SPLIT[dow].rest;
+    const done = S.done[k] && S.done[k].complete;
+    if(i===0){ // 今天:還沒練不扣分,但也不加(除非已完成或休息)
+      if(isRest||done){ s+=isRest?0:1; }
+      // 今天未完成→繼續往回看,不中斷
+    } else {
+      if(isRest){ /* 不中斷,不加 */ }
+      else if(done){ s++; }
+      else break;
+    }
+    d.setDate(d.getDate()-1);
+  }
+  return s;
+}
+function weekDone(){
+  // 本週(週一起算)已完成的訓練日數
+  const now=new Date(); const day=(now.getDay()+6)%7; // 0=Mon
+  let c=0; const d=new Date(now); d.setDate(d.getDate()-day);
+  for(let i=0;i<7;i++){ const k=todayKey(d); if(S.done[k]&&S.done[k].complete)c++; d.setDate(d.getDate()+1); }
+  return c;
+}
+
+/* ---------- 渲染 ---------- */
+const TAGLINES=[
+  "沒有藉口。今天就是練的一天。","痛苦是暫時的，放棄是永遠的。","你今天偷的懶，明天加倍還。",
+  "弱點不練，永遠是弱點。","鐵不會說謊。舉起來。","強壯不是天生，是練出來的。",
+  "每一組，都是對昨天的自己宣戰。","腿，是力量的引擎。給我蹲下去。"
+];
+function renderStats(){
+  $("#stStreak").textContent = getStreak();
+  $("#stWeek").textContent = weekDone()+"/6";
+  $("#stTotal").textContent = S.total||0;
+  $("#tagline").textContent = TAGLINES[ new Date().getDate() % TAGLINES.length ];
+}
+
+function eqHTML(need){
+  return need.filter(n=>n!=="body").map(n=>`<span class="e">${EQUIP[n].em} ${EQUIP[n].nm}</span>`).join("")
+    || `<span class="e">${EQUIP.body.em} 徒手</span>`;
+}
+
+function renderToday(){
+  const date=new Date(); const key=todayKey(date);
+  const D=buildDay(date); const cfg=D.cfg;
+  const st=dayState(key);
+  const v=$("#view-today");
+
+  if(D.rest){
+    v.innerHTML = `
+      <div class="daybanner rest" style="--accent:linear-gradient(135deg,#3a3a44,#22222a)">
+        <div class="db-top">
+          <div><div class="db-date">${WD[date.getDay()]} · ${date.getMonth()+1}/${date.getDate()}</div>
+          <div class="db-title">${cfg.title}</div>
+          <div class="db-sub">${cfg.sub}</div></div>
+          <div class="db-badge">${cfg.icon}</div>
+        </div>
+      </div>
+      <div class="seclabel"><span class="em">🛌</span><span>恢復建議</span><div class="ln"></div></div>
+      <div class="tip"><span class="i">💡</span><div>今天讓肌肉修復。可做 10–15 分鐘輕鬆散步、伸展或滾筒放鬆。睡飽、吃夠蛋白質——這就是你變強的時候。</div></div>
+      <div class="tip" style="margin-top:11px;background:linear-gradient(135deg,rgba(35,197,82,.10),rgba(58,160,255,.05));border-color:rgba(35,197,82,.25);color:#bff0c9">
+        <span class="i">🔥</span><div>連續紀錄不會因休息中斷。明天是 <b>${SPLIT[(date.getDay()+1)%7].title}</b>，養足精神回來。</div></div>`;
+    return;
+  }
+
+  const total=D.items.length;
+  const doneN=D.items.filter((_,i)=>st.checks[i]).length;
+  const pct=total?Math.round(doneN/total*100):0;
+  const allDone = doneN===total && total>0;
+
+  let html=`
+    <div class="daybanner" style="--accent:linear-gradient(135deg,${cfg.color},#ff7a18)">
+      <div class="db-top">
+        <div><div class="db-date">${WD[date.getDay()]} · ${date.getMonth()+1}/${date.getDate()}</div>
+        <div class="db-title">${cfg.title}</div>
+        <div class="db-sub">${cfg.sub}</div>
+        <div class="db-tags">
+          ${cfg.tags.map((t,i)=>`<span class="chip ${i===0?'hot':''}">${t}</span>`).join("")}
+          <span class="chip">⏱ 約 ${D.est} 分</span>
+          ${D.circuit?'<span class="chip">🔁 循環式</span>':''}
+        </div></div>
+        <div class="db-badge">${cfg.icon}</div>
+      </div>
+      <div class="dprog">
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="meta"><span>進度 ${doneN}/${total}</span><span>${pct}%${st.complete?' · 已完成 ✓':''}</span></div>
+      </div>
+    </div>`;
+
+  // 暖身
+  html+=`<div class="seclabel"><span class="em">🔥</span><span>暖身 WARM-UP · 5 分</span><div class="ln"></div></div>
+    <div class="tip"><span class="i">⚡</span><div>${warmupFor(cfg)}</div></div>`;
+
+  // 主菜單
+  html+=`<div class="seclabel"><span class="em">${cfg.icon}</span><span>${D.circuit?'主循環 CIRCUIT':'主訓練 WORKOUT'}</span><div class="ln"></div></div>`;
+  if(D.circuit){
+    html+=`<div class="tip" style="background:linear-gradient(135deg,rgba(35,197,82,.1),rgba(255,122,24,.05));border-color:rgba(35,197,82,.25);color:#cdebd4"><span class="i">🔁</span><div>完成 <b>5 輪</b>。每個動作做 <b>40 秒</b>、休 20 秒，動作間不停。每輪結束休息 60–90 秒。拼了！</div></div>`;
+  }
+  D.items.forEach((ex,i)=>{
+    const on=!!st.checks[i];
+    const repsLabel = D.circuit? "40秒" : ex.reps;
+    html+=`
+    <div class="ex ${on?'done':''}" data-i="${i}">
+      <div class="chk" data-chk="${i}">✓</div>
+      <div class="body">
+        <div class="nm">${ex.nm}</div>
+        <div class="en">${ex.en} · ${ex.label}</div>
+        <div class="scheme">
+          ${D.circuit
+            ? `<span class="pill"><span class="k">輪</span><b>5</b></span><span class="pill"><span class="k">每組</span><b>40</b>秒</span><span class="pill"><span class="k">休</span><b>20</b>秒</span>`
+            : `<span class="pill"><span class="k">組</span><b>${ex.sets}</b></span><span class="pill"><span class="k">次</span><b>${ex.reps}</b></span><span class="pill"><span class="k">休</span><b>${ex.rest}</b>秒</span>`}
+        </div>
+        <div class="equip">${eqHTML(ex.need)}</div>
+      </div>
+      <button class="timerbtn" data-timer="${ex.rest}">⏱<span class="t">${ex.rest}s</span></button>
+    </div>`;
+  });
+
+  // 收操 + 按鈕
+  html+=`<div class="seclabel"><span class="em">🧘</span><span>收操 · 3 分</span><div class="ln"></div></div>
+    <div class="tip"><span class="i">🌿</span><div>針對今天練的部位做 2–3 個靜態伸展，每個 30 秒。深呼吸，把心率降下來。</div></div>`;
+
+  html+=`<div class="actions">
+    <button class="btn ${st.complete?'done':'go'}" id="completeBtn">${st.complete?'✓ 今日已完成 點此取消':allDone?'🏆 收工！標記完成':'💪 全部完成 標記今日'}</button>
+    <button class="btn ghost" id="resetDayBtn">清除今日勾選</button>
+  </div>`;
+
+  v.innerHTML=html;
+}
+
+function warmupFor(cfg){
+  const t=cfg.title;
+  if(t.includes("腿")||t.includes("下肢")) return "原地慢跑 1 分 → 深蹲徒手 ×15 → 弓箭步 ×10/邊 → 髖關節繞環 ×10。讓膝、髖、踝都熱開。";
+  if(t.includes("推")||t.includes("肩")) return "肩繞環 ×15 → 伏地挺身 ×10 → 彈力帶/空槓肩推 ×15 → 胸椎旋轉 ×8/邊。肩袖一定要先喚醒。";
+  if(t.includes("拉")||t.includes("背")) return "肩胛繞環 ×15 → 死懸吊 20 秒 → 輕重量划船 ×15 → 超人式 ×12。背先有感再上重量。";
+  if(t.includes("體能")||t.includes("全身")) return "開合跳 ×30 → 徒手深蹲 ×15 → 壺鈴空擺 ×15 → 高抬腿 30 秒。把心率拉起來。";
+  return "全身關節繞環 + 5 分鐘輕度有氧，讓核心溫度升高。";
+}
+
+function renderWeek(){
+  const v=$("#view-week");
+  const now=new Date(); const day=(now.getDay()+6)%7;
+  const mon=new Date(now); mon.setDate(now.getDate()-day);
+  let legCount=0;
+  let html=`<div class="seclabel"><span class="em">📋</span><span>本週作戰計畫</span><div class="ln"></div></div>`;
+  for(let i=0;i<7;i++){
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    const cfg=SPLIT[d.getDay()]; const key=todayKey(d);
+    const isToday=key===todayKey(now);
+    const done=S.done[key]&&S.done[key].complete;
+    const isLeg=cfg.tags&&cfg.tags.includes("腿"); if(isLeg)legCount++;
+    html+=`
+    <div class="wkrow ${isToday?'today':''}" data-goday="${d.getDay()}">
+      <div class="wd"><div class="d">${d.getDate()}</div><div class="w">${WD[d.getDay()]}</div></div>
+      <div class="ic">${cfg.icon}</div>
+      <div class="info"><div class="t">${cfg.title}</div><div class="s">${cfg.sub}</div></div>
+      ${cfg.rest?'':`<span class="focus" style="background:${cfg.color}">${cfg.tags[0]}</span>`}
+      <div class="st">${cfg.rest?'😴':done?'✅':isToday?'🎯':'⬜'}</div>
+    </div>`;
+  }
+  html+=`<div class="tip" style="margin-top:16px"><span class="i">🦵</span><div>本週排了 <b>${legCount} 天腿</b>（你的弱點重點加強）、推 2 天、拉 1 天、全身體能 1 天。同部位不會連兩天，給足恢復。</div></div>`;
+  html+=`<div class="tip" style="margin-top:11px;background:linear-gradient(135deg,rgba(58,160,255,.1),rgba(35,197,82,.05));border-color:rgba(58,160,255,.25);color:#bfe0ff"><span class="i">📈</span><div>動作每週自動輪換，避免身體適應、持續進步。重量原則：能標準完成目標次數，下次就加一點。</div></div>`;
+  v.innerHTML=html;
+}
+
+function renderSet(){
+  const v=$("#view-set");
+  let eq="";
+  Object.keys(EQUIP).forEach(k=>{
+    if(k==="body")return;
+    const on=S.equip[k];
+    eq+=`<div class="eqtog ${on?'on':''}" data-eq="${k}">
+      <span class="em">${EQUIP[k].em}</span>
+      <div><div class="nm">${EQUIP[k].nm}</div><div class="sub">${EQUIP[k].en}</div></div>
+      <span class="sw">✓</span>
+    </div>`;
+  });
+  v.innerHTML=`
+    <div class="seclabel"><span class="em">🛠</span><span>我的器材</span><div class="ln"></div></div>
+    <div class="setcard">
+      <h3>裝備庫</h3><p class="d">關掉沒有的器材，菜單會自動換成你做得到的動作。徒手永遠可用。</p>
+      <div class="equip-grid">${eq}</div>
+    </div>
+    <div class="setcard">
+      <h3>訓練規則</h3>
+      <div style="font-size:13px;color:var(--mut);font-weight:700;line-height:1.9">
+        🦵 腿每週 3 天（弱點加強）<br>
+        🔁 同部位不連兩天，確保恢復<br>
+        ⏱ 每日 30–60 分鐘<br>
+        📅 週一腿 / 週二推 / 週三拉 / 週四腿 / 週五肩臂 / 週六體能 / 週日休<br>
+        🔀 動作每週自動輪換
+      </div>
+    </div>
+    <div class="setcard">
+      <h3>數據</h3>
+      <p class="d">總完成 ${S.total||0} 次訓練 · 連續 ${getStreak()} 天</p>
+      <button class="linkbtn" id="resetAll">⚠️ 清除所有紀錄</button>
+    </div>`;
+}
+
+/* ---------- 事件 ---------- */
+function renderAll(){ renderStats(); renderToday(); renderWeek(); renderSet(); }
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+  t.classList.add("on");
+  ["today","week","set"].forEach(n=>$("#view-"+n).classList.toggle("hide",n!==t.dataset.tab));
+});
+
+document.addEventListener("click",e=>{
+  // 勾選動作
+  const chk=e.target.closest("[data-chk]");
+  if(chk){
+    const i=+chk.dataset.chk; const key=todayKey();
+    const st=dayState(key); st.checks[i]=!st.checks[i];
+    // 全勾自動標記完成? 不自動,讓使用者按收工。但更新顯示
+    setDayState(key,st); renderToday(); renderStats();
+    return;
+  }
+  // 計時器
+  const tb=e.target.closest("[data-timer]");
+  if(tb){ openTimer(+tb.dataset.timer); return; }
+  // 完成今日
+  if(e.target.id==="completeBtn"){
+    const key=todayKey(); const st=dayState(key);
+    if(st.complete){ st.complete=false; S.total=Math.max(0,(S.total||0)-1); }
+    else { st.complete=true; S.total=(S.total||0)+1; toast("🏆 收工！強了一點點"); }
+    setDayState(key,st); renderAll();
+    return;
+  }
+  if(e.target.id==="resetDayBtn"){
+    const key=todayKey(); const st=dayState(key); st.checks={};
+    if(st.complete){st.complete=false;S.total=Math.max(0,(S.total||0)-1);}
+    setDayState(key,st); renderAll(); return;
+  }
+  // 器材切換
+  const eq=e.target.closest("[data-eq]");
+  if(eq){ const k=eq.dataset.eq; S.equip[k]=S.equip[k]?0:1; save(); renderSet(); renderToday(); renderWeek(); toast("菜單已依器材更新"); return; }
+  // 週列表→跳今日(同一天)
+  const wr=e.target.closest("[data-goday]");
+  if(wr){ document.querySelector('.tab[data-tab="today"]').click(); window.scrollTo({top:0,behavior:'smooth'}); return; }
+  if(e.target.id==="resetAll"){
+    if(confirm("確定清除所有訓練紀錄？此動作無法復原。")){ S={...DEF}; save(); renderAll(); toast("已重置"); }
+  }
+});
+
+/* ---------- 計時器 ---------- */
+let tState={t:0,total:0,run:false,iv:null};
+const ARC=678.58;
+function openTimer(sec){
+  tState={t:sec,total:sec,run:true,iv:null};
+  $("#timerOv").classList.add("show");
+  paintTimer(); startTick();
+}
+function paintTimer(){
+  $("#tNum").textContent=tState.t;
+  const frac=tState.total?tState.t/tState.total:0;
+  $("#tArc").style.strokeDashoffset = ARC*(1-frac);
+  $("#tToggle").textContent=tState.run?"暫停":"繼續";
+}
+function startTick(){
+  clearInterval(tState.iv);
+  tState.iv=setInterval(()=>{
+    if(!tState.run)return;
+    tState.t--;
+    if(tState.t<=0){ tState.t=0; paintTimer(); clearInterval(tState.iv); beep(); $("#tNum").textContent="GO!"; toast("休息結束 · 下一組！"); return; }
+    paintTimer();
+  },1000);
+}
+$("#tToggle").onclick=()=>{ tState.run=!tState.run; paintTimer(); };
+$("#tReset").onclick=()=>{ tState.t=tState.total; tState.run=true; paintTimer(); startTick(); };
+$("#tClose").onclick=()=>{ clearInterval(tState.iv); $("#timerOv").classList.remove("show"); };
+document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{ tState.t=Math.max(0,tState.t+ +b.dataset.add); tState.total=Math.max(tState.total,tState.t); paintTimer(); });
+$("#timerOv").onclick=e=>{ if(e.target.id==="timerOv"){clearInterval(tState.iv);$("#timerOv").classList.remove("show");} };
+
+function beep(){
+  try{const a=new(window.AudioContext||window.webkitAudioContext)();
+    [0,0.2,0.4].forEach(d=>{const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;o.start(a.currentTime+d);g.gain.setValueAtTime(.3,a.currentTime+d);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+d+.15);o.stop(a.currentTime+d+.15);});
+  }catch(e){}
+}
+
+let toastT;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2200); }
+
+/* ---------- go ---------- */
+renderAll();
+</script>
+</body>
+</html>
