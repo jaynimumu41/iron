@@ -287,7 +287,8 @@ const EX = {
     {nm:"壺鈴箭步蹲",en:"KB Lunge",         need:["kb"]},
     {nm:"槓鈴箭步蹲",en:"Barbell Lunge",    need:["bb"]},
     {nm:"負重登階", en:"Weighted Step-up",  need:["bench","db"]},
-    {nm:"徒手深蹲(慢離心)",en:"Tempo Air Squat",need:["body"]}
+    {nm:"徒手深蹲(慢離心)",en:"Tempo Air Squat",need:["body"]},
+    {nm:"跳躍深蹲", en:"Jump Squat",        need:["body"]}
   ],
   legHinge:[
     {nm:"槓鈴硬舉", en:"Deadlift",          need:["bb"]},
@@ -298,7 +299,8 @@ const EX = {
     {nm:"早安式",   en:"Good Morning",      need:["bb"]},
     {nm:"壺鈴擺盪", en:"KB Swing",          need:["kb"]},
     {nm:"單腿羅馬尼亞硬舉",en:"Single-leg RDL",need:["db"]},
-    {nm:"臀橋(慢)", en:"Glute Bridge",      need:["body"]}
+    {nm:"臀橋(慢)", en:"Glute Bridge",      need:["body"]},
+    {nm:"單腿臀橋", en:"Single-leg Glute Bridge",need:["body"]}
   ],
   legAcc:[
     {nm:"保加利亞分腿蹲",en:"Bulgarian Split Squat",need:["bench"]},
@@ -314,7 +316,8 @@ const EX = {
     {nm:"上斜啞鈴臥推",en:"Incline DB Press",need:["bench","db"]},
     {nm:"啞鈴飛鳥", en:"DB Fly",            need:["bench","db"]},
     {nm:"雙椅撐體", en:"Bench Dips",        need:["bench"]},
-    {nm:"伏地挺身", en:"Push-up",           need:["body"]}
+    {nm:"伏地挺身", en:"Push-up",           need:["body"]},
+    {nm:"寬距伏地挺身",en:"Wide Push-up",   need:["body"]}
   ],
   pushShoulder:[
     {nm:"槓鈴肩推", en:"Overhead Press",    need:["bb"]},
@@ -322,13 +325,15 @@ const EX = {
     {nm:"壺鈴肩推", en:"KB Press",          need:["kb"]},
     {nm:"阿諾肩推", en:"Arnold Press",      need:["db"]},
     {nm:"側平舉",   en:"Lateral Raise",     need:["db"]},
-    {nm:"派克伏地挺身",en:"Pike Push-up",   need:["body"]}
+    {nm:"派克伏地挺身",en:"Pike Push-up",   need:["body"]},
+    {nm:"墊高派克挺身",en:"Elevated Pike Push-up",need:["body"]}
   ],
   pushTri:[
     {nm:"窄距伏地挺身",en:"Close-grip Push-up",need:["body"]},
     {nm:"啞鈴過頭三頭",en:"OH Tricep Ext",  need:["db"]},
     {nm:"雙椅撐體", en:"Bench Dips",        need:["bench"]},
-    {nm:"啞鈴俯身臂屈伸",en:"DB Kickback",  need:["db"]}
+    {nm:"啞鈴俯身臂屈伸",en:"DB Kickback",  need:["db"]},
+    {nm:"鑽石伏地挺身",en:"Diamond Push-up",need:["body"]}
   ],
   pullBack:[
     {nm:"引體向上", en:"Pull-up",           need:["pull"]},
@@ -336,14 +341,19 @@ const EX = {
     {nm:"槓鈴划船", en:"Barbell Row",       need:["bb"]},
     {nm:"啞鈴單臂划船",en:"DB Row",         need:["db"]},
     {nm:"壺鈴划船", en:"KB Row",            need:["kb"]},
-    {nm:"離心引體", en:"Negative Pull-up",  need:["pull"]}
+    {nm:"離心引體", en:"Negative Pull-up",  need:["pull"]},
+    {nm:"桌下反向划船",en:"Inverted Table Row",need:["body"]},
+    {nm:"毛巾門框划船",en:"Doorway Towel Row",need:["body"]},
+    {nm:"超人式",   en:"Superman",          need:["body"]}
   ],
   pullBicep:[
     {nm:"啞鈴二頭彎舉",en:"DB Curl",        need:["db"]},
     {nm:"槓鈴彎舉", en:"Barbell Curl",      need:["bb"]},
     {nm:"反手引體", en:"Chin-up",           need:["pull"]},
     {nm:"壺鈴高拉", en:"KB High Pull",      need:["kb"]},
-    {nm:"錘式彎舉", en:"Hammer Curl",       need:["db"]}
+    {nm:"錘式彎舉", en:"Hammer Curl",       need:["db"]},
+    {nm:"反手桌下划船",en:"Underhand Table Row",need:["body"]},
+    {nm:"毛巾等長彎舉",en:"Towel Iso Curl", need:["body"]}
   ],
   core:[
     {nm:"懸吊舉腿", en:"Hanging Leg Raise", need:["pull"]},
@@ -362,6 +372,8 @@ const EX = {
     {nm:"高腳杯深蹲",en:"Goblet Squat",     need:["db"]},
     {nm:"波比跳",   en:"Burpee",            need:["body"]},
     {nm:"登山者",   en:"Mountain Climber",  need:["body"]},
+    {nm:"開合跳",   en:"Jumping Jack",      need:["body"]},
+    {nm:"高抬腿",   en:"High Knees",        need:["body"]},
     {nm:"啞鈴推舉箭步",en:"DB Thruster",    need:["db"]}
   ]
 };
@@ -427,7 +439,19 @@ const HOWTO = {
   "壺鈴翻推":"先把壺鈴翻到肩前架住（clean），再順勢推過頭（press），兩動作連貫。",
   "波比跳":"下蹲撐地→雙腳跳成棒式→(可加一下伏地挺身)→收腿起身向上跳，全身燃脂。",
   "登山者":"撐成棒式，雙膝交替快速收向胸口、像原地跑，核心保持穩定不翹臀。",
-  "啞鈴推舉箭步":"高腳杯持啞鈴深蹲，起身時順勢把啞鈴推過頭頂，全身連貫發力（Thruster）。"
+  "啞鈴推舉箭步":"高腳杯持啞鈴深蹲，起身時順勢把啞鈴推過頭頂，全身連貫發力（Thruster）。",
+  "桌下反向划船":"躺進堅固的桌子下方、雙手抓住桌緣，身體打直把胸口拉向桌面再慢慢下放。徒手練背的最佳選擇。",
+  "毛巾門框划船":"毛巾繞過門把或穩固柱子，雙手抓緊、身體後傾，背發力把身體拉向前再控制後放。",
+  "超人式":"趴姿、雙手雙腳同時抬離地面，夾緊下背與臀停1–2秒再放下，強化整個後側鏈。",
+  "反手桌下划船":"同桌下反向划船，但掌心朝自己、握距與肩同寬，二頭參與更多。",
+  "毛巾等長彎舉":"雙腳踩住毛巾兩端、雙手握中段，做彎舉姿勢全力上拉對抗5–8秒為一次，二頭持續緊繃。",
+  "跳躍深蹲":"蹲下後爆發向上跳起，輕巧落地立刻接下一下。練腿部爆發力，膝蓋保持對齊腳尖。",
+  "單腿臀橋":"仰躺單腳踩地、另一腿伸直抬起，用單側臀部發力把髖頂到最高停1秒再放下，換邊。",
+  "寬距伏地挺身":"雙手張開約肩寬1.5倍做伏地挺身，更多胸部外側參與，下放到胸口有拉伸感。",
+  "墊高派克挺身":"雙腳墊高在椅子或台階上、臀部抬高成倒V，頭頂朝地下放再推起，比派克更接近肩推。",
+  "鑽石伏地挺身":"雙手拇指食指相觸成鑽石形置於胸下，手肘貼身下放推起，三頭刺激最大化。",
+  "開合跳":"雙腳跳開同時雙手過頭擊掌，再跳回收緊，保持節奏輕快、核心穩定。",
+  "高抬腿":"原地快跑、膝蓋輪流抬到髖部高度，雙手配合擺動，腳掌輕觸地。"
 };
 
 /* ---------- weekly split (固定，從設計上保證規則) ----------
@@ -492,6 +516,24 @@ const SPLIT = {
   0:{title:"完全休息",sub:"恢復才是變強的一部分",icon:"😴",color:"#5a5a64",rest:true}
 };
 
+/* ---------- 只練腿模式分化 (蹲系/後鏈交替，避免同一動作型態連兩天) ---------- */
+const LEGSPLIT = {
+  1:{title:"蹲系力量",sub:"深蹲主導 · 股四頭",icon:"🦵",color:"#ff4b3e",tags:["腿","蹲","力量"],
+     slots:[{pool:"legSquat",role:"primary",label:"主項"},{pool:"legSquat",role:"secondary",label:"次項"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"core",role:"core",label:"核心"}]},
+  2:{title:"後鏈臀腿",sub:"硬舉主導 · 臀 · 腿後",icon:"🍑",color:"#e6312f",tags:["腿","硬舉","臀"],
+     slots:[{pool:"legHinge",role:"primary",label:"主項"},{pool:"legHinge",role:"secondary",label:"次項"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"core",role:"core",label:"核心"}]},
+  3:{title:"單邊穩定",sub:"單腿 · 平衡 · 小腿",icon:"🦿",color:"#ff7a18",tags:["腿","單邊","穩定"],
+     slots:[{pool:"legAcc",role:"secondary",label:"單邊"},{pool:"legAcc",role:"secondary",label:"單邊"},{pool:"legHinge",role:"accessory",label:"臀"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"core",role:"core",label:"核心"}]},
+  4:{title:"蹲系力量 II",sub:"換個蹲法 · 再轟一次",icon:"🦵",color:"#ff4b3e",tags:["腿","蹲","力量"],
+     slots:[{pool:"legSquat",role:"primary",label:"主項"},{pool:"legSquat",role:"secondary",label:"次項"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"core",role:"core",label:"核心"}]},
+  5:{title:"後鏈臀腿 II",sub:"硬舉變化 · 臀腿收尾",icon:"🍑",color:"#e6312f",tags:["腿","硬舉","臀"],
+     slots:[{pool:"legHinge",role:"primary",label:"主項"},{pool:"legHinge",role:"secondary",label:"次項"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"core",role:"core",label:"核心"}]},
+  6:{title:"腿部體能",sub:"腿日循環 · 心肺燃脂",icon:"⚡",color:"#23c552",tags:["腿","體能","循環"],circuit:true,
+     slots:[{pool:"legSquat",role:"cond",label:"循環"},{pool:"legHinge",role:"cond",label:"循環"},{pool:"legAcc",role:"cond",label:"循環"},{pool:"legAcc",role:"cond",label:"循環"},{pool:"core",role:"cond",label:"循環"}]},
+  0:{title:"完全休息",sub:"腿也需要長肌肉的時間",icon:"😴",color:"#5a5a64",rest:true}
+};
+function getSplit(dow){ return (S.mode==="legs"?LEGSPLIT:SPLIT)[dow]; }
+
 /* role → 組數/次數/休息(秒) */
 const ROLE = {
   primary:   {sets:5, reps:"5",    rest:150, sw:50},
@@ -502,7 +544,7 @@ const ROLE = {
 };
 
 /* ---------- state ---------- */
-const DEF = {equip:{kb:1,bb:1,db:1,pull:1,bench:1,body:1}, done:{}, total:0, optTrain:{}};
+const DEF = {equip:{kb:1,bb:1,db:1,pull:1,bench:1,body:1}, done:{}, total:0, optTrain:{}, mode:"std"};
 let S = load();
 function load(){ try{return Object.assign({},DEF,JSON.parse(localStorage.iron_state||"{}"))}catch(e){return {...DEF}} }
 function save(){ localStorage.iron_state = JSON.stringify(S); }
@@ -565,7 +607,7 @@ function buildWorkout(cfg, seed){
 
 function buildDay(date){
   const dow = date.getDay();
-  const cfg = SPLIT[dow];
+  const cfg = getSplit(dow);
   const key = todayKey(date);
   const opt = S.optTrain && S.optTrain[key];
   if(cfg.rest && !opt) return {dow,cfg,rest:true,items:[]};          // 純休息日
@@ -586,7 +628,7 @@ function getStreak(){
   for(let i=0;i<400;i++){
     const k=todayKey(d); const dow=d.getDay();
     const opt = S.optTrain && S.optTrain[k];
-    const isRest = SPLIT[dow].rest && !opt;          // 有加練的週日視為訓練日
+    const isRest = getSplit(dow).rest && !opt;       // 有加練的週日視為訓練日
     const done = S.done[k] && S.done[k].complete;
     if(isRest){ d.setDate(d.getDate()-1); continue; } // 純休息日:不中斷、不加
     if(done){ s++; }                                  // 訓練日已完成 → +1
@@ -641,7 +683,7 @@ function renderToday(){
       <div class="seclabel"><span class="em">🛌</span><span>恢復建議</span><div class="ln"></div></div>
       <div class="tip"><span class="i">💡</span><div>今天讓肌肉修復。可做 10–15 分鐘輕鬆散步、伸展或滾筒放鬆。睡飽、吃夠蛋白質——這就是你變強的時候。</div></div>
       <div class="tip" style="margin-top:11px;background:linear-gradient(135deg,rgba(35,197,82,.10),rgba(58,160,255,.05));border-color:rgba(35,197,82,.25);color:#bff0c9">
-        <span class="i">🔥</span><div>連續紀錄不會因休息中斷。明天是 <b>${SPLIT[(date.getDay()+1)%7].title}</b>，養足精神回來。</div></div>
+        <span class="i">🔥</span><div>連續紀錄不會因休息中斷。明天是 <b>${getSplit((date.getDay()+1)%7).title}</b>，養足精神回來。</div></div>
       <div class="seclabel"><span class="em">💪</span><span>還是想練？</span><div class="ln"></div></div>
       <div class="tip" style="background:linear-gradient(135deg,rgba(255,75,62,.10),rgba(255,176,32,.05));border-color:rgba(255,75,62,.25);color:#ffd0b0"><span class="i">🔥</span><div>精神好就別浪費！選一個部位，我馬上排今天的菜單。建議選上半身——留力給明天的腿日；真的只想練腿也有 <b>🦵 下肢轟炸</b>。</div></div>
       <div class="optgrid">
@@ -731,11 +773,11 @@ function renderToday(){
 }
 
 function warmupFor(cfg){
-  const t=cfg.title;
-  if(t.includes("腿")||t.includes("下肢")) return "原地慢跑 1 分 → 深蹲徒手 ×15 → 弓箭步 ×10/邊 → 髖關節繞環 ×10。讓膝、髖、踝都熱開。";
-  if(t.includes("推")||t.includes("肩")) return "肩繞環 ×15 → 伏地挺身 ×10 → 彈力帶/空槓肩推 ×15 → 胸椎旋轉 ×8/邊。肩袖一定要先喚醒。";
-  if(t.includes("拉")||t.includes("背")) return "肩胛繞環 ×15 → 死懸吊 20 秒 → 輕重量划船 ×15 → 超人式 ×12。背先有感再上重量。";
+  const t=cfg.title+(cfg.tags||[]).join("");
   if(t.includes("體能")||t.includes("全身")) return "開合跳 ×30 → 徒手深蹲 ×15 → 壺鈴空擺 ×15 → 高抬腿 30 秒。把心率拉起來。";
+  if(t.includes("腿")||t.includes("下肢")||t.includes("蹲")||t.includes("臀")) return "原地慢跑 1 分 → 深蹲徒手 ×15 → 弓箭步 ×10/邊 → 髖關節繞環 ×10。讓膝、髖、踝都熱開。";
+  if(t.includes("拉")||t.includes("背")) return "肩胛繞環 ×15 → 死懸吊 20 秒 → 輕重量划船 ×15 → 超人式 ×12。背先有感再上重量。";
+  if(t.includes("推")||t.includes("肩")||t.includes("胸")||t.includes("手臂")) return "肩繞環 ×15 → 伏地挺身 ×10 → 彈力帶/空槓肩推 ×15 → 胸椎旋轉 ×8/邊。肩袖一定要先喚醒。";
   return "全身關節繞環 + 5 分鐘輕度有氧，讓核心溫度升高。";
 }
 
@@ -747,7 +789,7 @@ function renderWeek(){
   let html=`<div class="seclabel"><span class="em">📋</span><span>本週作戰計畫</span><div class="ln"></div></div>`;
   for(let i=0;i<7;i++){
     const d=new Date(mon); d.setDate(mon.getDate()+i);
-    let cfg=SPLIT[d.getDay()]; const key=todayKey(d);
+    let cfg=getSplit(d.getDay()); const key=todayKey(d);
     const opt=S.optTrain && S.optTrain[key];
     if(cfg.rest && opt) cfg=OPT[opt];   // 週日選了加練 → 顯示該菜單
     const isToday=key===todayKey(now);
@@ -762,7 +804,9 @@ function renderWeek(){
       <div class="st">${cfg.rest?'😴':done?'✅':isToday?'🎯':'⬜'}</div>
     </div>`;
   }
-  html+=`<div class="tip" style="margin-top:16px"><span class="i">🦵</span><div>本週排了 <b>${legCount} 天腿</b>（你的弱點重點加強）、推 2 天、拉 1 天、全身體能 1 天。同部位不會連兩天，給足恢復。</div></div>`;
+  html+= S.mode==="legs"
+    ? `<div class="tip" style="margin-top:16px"><span class="i">🦵</span><div><b>只練腿模式</b>：6 天全是腿，蹲系與後鏈交替、中間穿插單邊穩定，讓不同腿部肌群輪流恢復。覺得太操隨時可在設定切回標準分化。</div></div>`
+    : `<div class="tip" style="margin-top:16px"><span class="i">🦵</span><div>本週排了 <b>${legCount} 天腿</b>（你的弱點重點加強）、推 2 天、拉 1 天、全身體能 1 天。同部位不會連兩天，給足恢復。</div></div>`;
   html+=`<div class="tip" style="margin-top:11px;background:linear-gradient(135deg,rgba(58,160,255,.1),rgba(35,197,82,.05));border-color:rgba(58,160,255,.25);color:#bfe0ff"><span class="i">📈</span><div>動作每週自動輪換，避免身體適應、持續進步。重量原則：能標準完成目標次數，下次就加一點。</div></div>`;
   v.innerHTML=html;
 }
@@ -779,21 +823,32 @@ function renderSet(){
       <span class="sw">✓</span>
     </div>`;
   });
+  const rules = S.mode==="legs"
+    ? `🦵 每天都是腿：蹲系 / 後鏈 / 單邊交替<br>
+       ⏱ 每日 30–60 分鐘<br>
+       📅 週一蹲 / 週二後鏈 / 週三單邊 / 週四蹲 / 週五後鏈 / 週六腿體能 / 週日休<br>
+       🔀 動作每週自動輪換`
+    : `🦵 腿每週 3 天（弱點加強）<br>
+       🔁 同部位不連兩天，確保恢復<br>
+       ⏱ 每日 30–60 分鐘<br>
+       📅 週一腿 / 週二推 / 週三拉 / 週四腿 / 週五肩臂 / 週六體能 / 週日休<br>
+       🔀 動作每週自動輪換`;
   v.innerHTML=`
-    <div class="seclabel"><span class="em">🛠</span><span>我的器材</span><div class="ln"></div></div>
+    <div class="seclabel"><span class="em">🛠</span><span>訓練設定</span><div class="ln"></div></div>
+    <div class="setcard">
+      <h3>訓練模式</h3><p class="d">只想練腿？切到「只練腿」，整週菜單都是腿。</p>
+      <div class="equip-grid">
+        <div class="eqtog ${S.mode!=="legs"?'on':''}" data-mode="std"><span class="em">🏋️</span><div><div class="nm">標準分化</div><div class="sub">推拉腿全面練</div></div><span class="sw">✓</span></div>
+        <div class="eqtog ${S.mode==="legs"?'on':''}" data-mode="legs"><span class="em">🦵</span><div><div class="nm">只練腿</div><div class="sub">每天都是腿日</div></div><span class="sw">✓</span></div>
+      </div>
+    </div>
     <div class="setcard">
       <h3>裝備庫</h3><p class="d">關掉沒有的器材，菜單會自動換成你做得到的動作。徒手永遠可用。</p>
       <div class="equip-grid">${eq}</div>
     </div>
     <div class="setcard">
       <h3>訓練規則</h3>
-      <div style="font-size:13px;color:var(--mut);font-weight:700;line-height:1.9">
-        🦵 腿每週 3 天（弱點加強）<br>
-        🔁 同部位不連兩天，確保恢復<br>
-        ⏱ 每日 30–60 分鐘<br>
-        📅 週一腿 / 週二推 / 週三拉 / 週四腿 / 週五肩臂 / 週六體能 / 週日休<br>
-        🔀 動作每週自動輪換
-      </div>
+      <div style="font-size:13px;color:var(--mut);font-weight:700;line-height:1.9">${rules}</div>
     </div>
     <div class="setcard">
       <h3>數據</h3>
@@ -854,6 +909,9 @@ document.addEventListener("click",e=>{
     delete S.done[key]; if(S.optTrain) delete S.optTrain[key];
     save(); renderAll(); toast("已改回休息日"); window.scrollTo({top:0,behavior:'smooth'}); return;
   }
+  // 訓練模式切換
+  const md=e.target.closest("[data-mode]");
+  if(md){ S.mode=md.dataset.mode; save(); renderAll(); toast(S.mode==="legs"?"🦵 只練腿模式：每天都是腿日":"已切回標準分化"); return; }
   // 器材切換
   const eq=e.target.closest("[data-eq]");
   if(eq){ const k=eq.dataset.eq; S.equip[k]=S.equip[k]?0:1; save(); renderSet(); renderToday(); renderWeek(); toast("菜單已依器材更新"); return; }
