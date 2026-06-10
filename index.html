@@ -23,7 +23,8 @@
   --green:#23c552; --blue:#3aa0ff;
   --grad:linear-gradient(135deg,#ff4b3e 0%,#ff7a18 100%);
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;touch-action:manipulation}
+button,.chk,.nm,.tcircle,.optbtn,.eqtog,.tab{-webkit-user-select:none;user-select:none}
 html,body{height:100%}
 body{
   background:var(--bg); color:var(--txt);
@@ -231,7 +232,7 @@ header{padding:22px 0 10px}
         <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4b3e"/><stop offset="1" stop-color="#ff7a18"/></linearGradient></defs>
       </svg>
       <div class="tnum" id="tNum">60</div>
-      <div class="tlbl">休息中 REST</div>
+      <div class="tlbl">休息 REST · 點圓圈開始/暫停</div>
     </div>
     <div class="tquick">
       <button data-add="-15">−15</button>
@@ -240,8 +241,8 @@ header{padding:22px 0 10px}
     </div>
     <div class="trow">
       <button class="tbtn" id="tReset">重設</button>
-      <button class="tbtn main" id="tToggle">暫停</button>
-      <button class="tbtn" id="tClose">完成</button>
+      <button class="tbtn main" id="tToggle">開始</button>
+      <button class="tbtn" id="tClose">關閉</button>
     </div>
   </div>
 </div>
@@ -538,9 +539,11 @@ const OPT = {
   arms:{title:"手臂核心",sub:"週日加練 · 手臂 · 腹",icon:"🔥",color:"#ffb020",tags:["加練","手臂","核心"],
     slots:[{pool:"pullBicep",role:"secondary",label:"二頭"},{pool:"pushTri",role:"secondary",label:"三頭"},{pool:"pullBicep",role:"accessory",label:"二頭"},{pool:"pushTri",role:"accessory",label:"三頭"},{pool:"core",role:"core",label:"核心"},{pool:"core",role:"core",label:"核心"}]},
   cond:{title:"全身體能",sub:"週日加練 · 壺鈴循環",icon:"⚡",color:"#23c552",tags:["加練","體能","循環"],circuit:true,
-    slots:[{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"core",role:"cond",label:"循環"}]}
+    slots:[{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"conditioning",role:"cond",label:"循環"},{pool:"core",role:"cond",label:"循環"}]},
+  legs:{title:"下肢轟炸",sub:"週日加練 · 只練腿 · 蹲+硬舉",icon:"🦵",color:"#e6312f",tags:["加練","腿","臀"],legday:true,
+    slots:[{pool:"legSquat",role:"primary",label:"主項"},{pool:"legHinge",role:"secondary",label:"次項"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"legAcc",role:"accessory",label:"輔助"},{pool:"core",role:"core",label:"核心"}]}
 };
-const OPT_SEED = {pull:11,push:23,arms:31,cond:43};
+const OPT_SEED = {pull:11,push:23,arms:31,cond:43,legs:53};
 
 function buildWorkout(cfg, seed){
   const used=[]; const items=[];
@@ -640,7 +643,7 @@ function renderToday(){
       <div class="tip" style="margin-top:11px;background:linear-gradient(135deg,rgba(35,197,82,.10),rgba(58,160,255,.05));border-color:rgba(35,197,82,.25);color:#bff0c9">
         <span class="i">🔥</span><div>連續紀錄不會因休息中斷。明天是 <b>${SPLIT[(date.getDay()+1)%7].title}</b>，養足精神回來。</div></div>
       <div class="seclabel"><span class="em">💪</span><span>還是想練？</span><div class="ln"></div></div>
-      <div class="tip" style="background:linear-gradient(135deg,rgba(255,75,62,.10),rgba(255,176,32,.05));border-color:rgba(255,75,62,.25);color:#ffd0b0"><span class="i">🔥</span><div>精神好就別浪費！選一個部位，我馬上排今天的菜單。<b>刻意不排腿</b>——留力給明天的腿日（同部位不連兩天）。</div></div>
+      <div class="tip" style="background:linear-gradient(135deg,rgba(255,75,62,.10),rgba(255,176,32,.05));border-color:rgba(255,75,62,.25);color:#ffd0b0"><span class="i">🔥</span><div>精神好就別浪費！選一個部位，我馬上排今天的菜單。建議選上半身——留力給明天的腿日；真的只想練腿也有 <b>🦵 下肢轟炸</b>。</div></div>
       <div class="optgrid">
         ${Object.keys(OPT).map(k=>`<div class="optbtn ${k==='pull'?'rec':''}" data-opt="${k}"><span class="em">${OPT[k].icon}</span><div><div class="nm">${OPT[k].title}${k==='pull'?' ⭐':''}</div><div class="sub">${OPT[k].tags.slice(1).join(' · ')}</div></div></div>`).join('')}
       </div>`;
@@ -671,7 +674,12 @@ function renderToday(){
       </div>
     </div>`;
 
-  if(D.optional){ html+=`<div class="tip" style="margin-top:14px;background:linear-gradient(135deg,rgba(255,75,62,.12),rgba(255,176,32,.06));border-color:rgba(255,75,62,.3);color:#ffd0b0"><span class="i">🔥</span><div>加練模式啟動！今天原是休息日，你選擇多練一場。已自動避開腿部，留力給明天的腿日。</div></div>`; }
+  if(D.optional){
+    const legNote = cfg.legday
+      ? "你選了只練腿！注意：明天也是腿日，今天重量放輕一點、做好收操，明天痠到走不動別怪我。"
+      : "已自動避開腿部，留力給明天的腿日。";
+    html+=`<div class="tip" style="margin-top:14px;background:linear-gradient(135deg,rgba(255,75,62,.12),rgba(255,176,32,.06));border-color:rgba(255,75,62,.3);color:#ffd0b0"><span class="i">🔥</span><div>加練模式啟動！今天原是休息日，你選擇多練一場。${legNote}</div></div>`;
+  }
 
   // 暖身
   html+=`<div class="seclabel"><span class="em">🔥</span><span>暖身 WARM-UP · 5 分</span><div class="ln"></div></div>
@@ -861,30 +869,43 @@ document.addEventListener("click",e=>{
 let tState={t:0,total:0,run:false,iv:null};
 const ARC=678.58;
 function openTimer(sec){
-  tState={t:sec,total:sec,run:true,iv:null};
+  clearInterval(tState.iv);
+  tState={t:sec,total:sec,run:false,iv:null};   // 打開先暫停,不自動跑 → 可先調秒數再開始
   $("#timerOv").classList.add("show");
-  paintTimer(); startTick();
+  paintTimer(); startLoop();
 }
 function paintTimer(){
-  $("#tNum").textContent=tState.t;
+  $("#tNum").textContent = tState.t>0 ? tState.t : "完成";
+  $("#tNum").style.fontSize = tState.t>0 ? "" : "52px";
   const frac=tState.total?tState.t/tState.total:0;
-  $("#tArc").style.strokeDashoffset = ARC*(1-frac);
-  $("#tToggle").textContent=tState.run?"暫停":"繼續";
+  $("#tArc").style.strokeDashoffset = ARC*(1-Math.max(0,frac));
+  const b=$("#tToggle");
+  if(tState.run) b.textContent="暫停";
+  else if(tState.t<=0) b.textContent="重新開始";
+  else if(tState.t<tState.total) b.textContent="繼續";
+  else b.textContent="開始";
 }
-function startTick(){
+function startLoop(){            // 單一常駐 loop,只在 run 時倒數;歸零不清除,讓 +秒數後能再開始
   clearInterval(tState.iv);
   tState.iv=setInterval(()=>{
-    if(!tState.run)return;
+    if(!tState.run) return;
     tState.t--;
-    if(tState.t<=0){ tState.t=0; paintTimer(); clearInterval(tState.iv); beep(); $("#tNum").textContent="GO!"; toast("休息結束 · 下一組！"); return; }
+    if(tState.t<=0){ tState.t=0; tState.run=false; paintTimer(); beep(); toast("休息結束 · 下一組！"); return; }
     paintTimer();
   },1000);
 }
-$("#tToggle").onclick=()=>{ tState.run=!tState.run; paintTimer(); };
-$("#tReset").onclick=()=>{ tState.t=tState.total; tState.run=true; paintTimer(); startTick(); };
-$("#tClose").onclick=()=>{ clearInterval(tState.iv); $("#timerOv").classList.remove("show"); };
-document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{ tState.t=Math.max(0,tState.t+ +b.dataset.add); tState.total=Math.max(tState.total,tState.t); paintTimer(); });
-$("#timerOv").onclick=e=>{ if(e.target.id==="timerOv"){clearInterval(tState.iv);$("#timerOv").classList.remove("show");} };
+function toggleTimer(){
+  if(tState.run){ tState.run=false; }                       // 暫停
+  else { if(tState.t<=0) tState.t=tState.total; tState.run=true; }  // 開始/繼續/重新開始
+  paintTimer();
+}
+function closeTimer(){ tState.run=false; clearInterval(tState.iv); $("#timerOv").classList.remove("show"); }
+$("#tToggle").onclick=toggleTimer;
+$(".tcircle").onclick=toggleTimer;                            // 點圓圈也能開始/暫停
+$("#tReset").onclick=()=>{ tState.t=tState.total; tState.run=false; paintTimer(); };  // 重設→回滿,暫停
+$("#tClose").onclick=closeTimer;
+document.querySelectorAll("[data-add]").forEach(b=>b.onclick=(e)=>{ e.stopPropagation(); tState.t=Math.max(0,tState.t+ +b.dataset.add); if(tState.t>tState.total)tState.total=tState.t; paintTimer(); });
+$("#timerOv").onclick=e=>{ if(e.target.id==="timerOv") closeTimer(); };
 
 function beep(){
   try{const a=new(window.AudioContext||window.webkitAudioContext)();
