@@ -307,6 +307,7 @@ const EX = {
     {nm:"壺鈴高腳杯蹲",en:"Goblet Squat",   need:["kb"]},
     {nm:"原地箭步蹲",en:"Reverse Lunge",    need:["body"]},
     {nm:"啞鈴側蹲", en:"DB Cossack Squat",  need:["db"]},
+    {nm:"負重提踵", en:"Weighted Calf Raise",need:["db"]},
     {nm:"提踵",     en:"Calf Raise",        need:["body"]},
     {nm:"牆壁靜蹲", en:"Wall Sit",          need:["body"]}
   ],
@@ -402,6 +403,7 @@ const HOWTO = {
   "原地箭步蹲":"徒手向後跨或原地下蹲，雙膝約90度、軀幹直立，左右交替。",
   "啞鈴側蹲":"雙腳寬站、腳尖微外。重心移向一側屈膝下蹲、另一腿伸直，左右交替，練內收與臀。",
   "提踵":"前腳掌踩穩（可墊高），腳跟盡量抬到最高停1秒，再慢慢下放，可手持啞鈴加重。",
+  "負重提踵":"雙手持啞鈴垂於體側，前腳掌踩穩（可墊高增加行程），腳跟抬到最高停1秒再慢慢下放。",
   "牆壁靜蹲":"背靠牆往下滑到大腿與地面平行、膝約90度，撐住計時。",
   "槓鈴臥推":"平躺椅上、握略寬於肩，肩胛收緊。槓垂直下放至胸口輕觸再推回，全程腳踩穩。",
   "啞鈴臥推":"雙手持啞鈴於胸線兩側、手肘約45度，向上推到接近併攏，控制下放回胸線。",
@@ -553,21 +555,29 @@ function save(){ localStorage.iron_state = JSON.stringify(S); }
 function weekNum(d){ const o=new Date(d); o.setHours(0,0,0,0); o.setDate(o.getDate()+4-(o.getDay()||7)); const y=new Date(o.getFullYear(),0,1); return Math.ceil(((o-y)/86400000+1)/7); }
 function avail(ex){ return ex.need.every(n=>S.equip[n]); }
 
+/* 這兩個池徒手動作本來就是主角(棒式/波比跳),不降級 */
+const BODY_FIRST = {core:1, conditioning:1};
+function rot(arr,seed){ if(arr.length<2)return arr.slice(); const k=seed%arr.length; return arr.slice(k).concat(arr.slice(0,k)); }
 function pickUnique(poolName, n, seed, used){
-  let pool = (EX[poolName]||[]).filter(avail);
+  const all = (EX[poolName]||[]).filter(avail);
+  let cands;
+  if(BODY_FIRST[poolName]){ cands = rot(all,seed); }
+  else {
+    // 器材動作優先,徒手只當沒器材可用時的備案
+    const tool = all.filter(ex=>ex.need.some(x=>x!=="body"));
+    const body = all.filter(ex=>!ex.need.some(x=>x!=="body"));
+    cands = rot(tool,seed).concat(rot(body,seed));
+  }
   // 去掉同名(避免同一天出現重複動作)
   const out=[]; const seen=new Set(used);
-  for(let i=0;i<pool.length && out.length<n;i++){
-    const ex = pool[(seed+i)%pool.length];
+  for(const ex of cands){
     if(seen.has(ex.nm)) continue;
     seen.add(ex.nm); out.push(ex);
+    if(out.length>=n) break;
   }
-  // 若不夠(器材太少)，允許重複名稱補滿，最後 fallback 徒手
+  // 若不夠(器材太少)，允許重複名稱補滿
   let g=0;
-  while(out.length<n){
-    if(pool.length){ out.push(pool[(seed+g)%pool.length]); }
-    else break; g++; if(g>20)break;
-  }
+  while(out.length<n && cands.length){ out.push(cands[(seed+g)%cands.length]); g++; if(g>20)break; }
   return out;
 }
 
